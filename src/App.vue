@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <div class="d-flex align-center"></div>
+    <v-app-bar app dense>
+      <v-toolbar-title>Workflow</v-toolbar-title>
 
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
