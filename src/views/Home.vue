@@ -1,7 +1,11 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-  </div>
+  <v-container>
+    <v-row>
+      <v-cols>
+        <h2>{{ heading }}</h2>
+      </v-cols>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -11,5 +15,8 @@
 export default {
   name: "Home",
   components: {},
+  data: () => ({
+    heading: "Home",
+  }),
 };
 </script>
