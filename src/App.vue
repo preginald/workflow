@@ -7,6 +7,11 @@
       <v-btn text to="/">Home</v-btn>
       <v-btn text to="/about">About</v-btn>
       <v-spacer></v-spacer>
+      <v-switch
+        v-model="$vuetify.theme.dark"
+        :label="$vuetify.theme.dark ? 'Dark' : 'Light'"
+        hide-details
+      ></v-switch>
     </v-app-bar>
 
     <v-main>
