@@ -4,9 +4,14 @@
       <div class="d-flex align-center"></div>
 
       <v-spacer></v-spacer>
+      <v-btn text to="/">Home</v-btn>
+      <v-btn text to="/about">About</v-btn>
+      <v-spacer></v-spacer>
     </v-app-bar>
 
-    <v-main> </v-main>
+    <v-main>
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 
