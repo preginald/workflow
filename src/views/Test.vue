@@ -5,25 +5,7 @@
         <h2 @click="getTheValue('databaseName')">{{ doc.title }}</h2>
       </v-col>
     </v-row>
-    <v-row>
-      <v-form>
-        <v-container>
-          <v-row>
-            <v-col
-              v-for="input in doc.inputs"
-              :key="input.name"
-              cols="12"
-              md="3"
-            >
-              <v-text-field
-                :label="input.label"
-                v-model="input.value"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
-    </v-row>
+    <Form />
     <v-stepper v-model="step">
       <v-stepper-header>
         <template v-for="step in doc.steps">
@@ -57,11 +39,12 @@
 <script>
 // @ is an alias to /src
 import { mapState } from "vuex";
+import Form from "@/components/Form";
 
 export default {
   computed: mapState(["doc"]),
   name: "Home",
-  components: {},
+  components: { Form },
   data: () => ({
     step: 1,
   }),
