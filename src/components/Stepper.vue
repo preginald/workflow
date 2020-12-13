@@ -34,7 +34,9 @@ import { mapState } from "vuex";
 export default {
   computed: mapState(["doc"]),
   components: {},
-  data: () => ({}),
+  data: () => ({
+    step: 1,
+  }),
   methods: {
     taskInterpreter(task) {
       let n = task.search("<variable>");
