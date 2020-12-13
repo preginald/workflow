@@ -161,6 +161,17 @@ export default new Vuex.Store({
         },
       ],
     },
+    users: [
+      {
+        name: 'preginald',
+        docs: [
+          {
+            name: 'Wordpress install on Apache virtualhost',
+            slug: 'install-wordpress-apache-virtualhost',
+          },
+        ],
+      },
+    ],
   },
   mutations: {},
   actions: {},
