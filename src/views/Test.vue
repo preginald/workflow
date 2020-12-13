@@ -18,7 +18,7 @@ export default {
   name: "Home",
   components: { Heading, Form, Stepper },
   data: () => ({
-    step: 1,
+    // step: 1,
   }),
 };
 </script>
