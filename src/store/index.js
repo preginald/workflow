@@ -166,8 +166,10 @@ export default new Vuex.Store({
         name: 'preginald',
         docs: [
           {
-            name: 'Wordpress install on Apache virtualhost',
-            slug: 'install-wordpress-apache-virtualhost',
+            title: 'Wordpress install on LAMP',
+            slug: 'wordpress-install-lamp',
+            subtitle:
+              'Steps that I use to install Wordpress on my LAMP droplet.',
           },
         ],
       },
