@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h2 @click="getTheValue('databaseName')">{{ doc.title }}</h2>
+        <h2>{{ doc.username }} / {{ doc.title }}</h2>
       </v-col>
     </v-row>
     <Form />
