@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     doc: {
+      username: 'preginald',
       title: 'Install Wordpress on Apache2 VirtualHost',
       inputs: [
         { name: 'databaseName', label: 'Database name', value: 'wordpress' },
