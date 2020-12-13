@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h2>{{ doc.username }} / {{ doc.title }}</h2>
+        <div class="text-h6">{{ doc.username }} / {{ doc.title }}</div>
       </v-col>
     </v-row>
     <Form />
