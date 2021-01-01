@@ -20,7 +20,7 @@
 
 <script>
 import { mapState } from "vuex";
-import Heading from "@/components/users/Heading";
+import Heading from "../../src/components/users/Heading";
 
 export default {
   computed: mapState(["users"]),
