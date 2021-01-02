@@ -29,6 +29,7 @@
 
 <script>
 import firebase from "firebase"
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "App",
@@ -36,20 +37,23 @@ export default {
   created(){
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.user = user;
+        this.setUser(user)
       } else {
-        this.user = null;
+        this.setUser(null)
       }
     });
 
   },
 
+  computed: {
+    ...mapState(["user"])
+  },
   components: {},
 
   data: () => ({
-    user: null
   }),
   methods: {
+    ...mapMutations(["setUser"]),
     logOut() {
       firebase.auth().signOut().then(() => {
         firebase.auth().onAuthStateChanged(() => {

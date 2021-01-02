@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    user: null,
     doc: {
       username: 'preginald',
       title: 'Install Wordpress on Apache2 VirtualHost',
@@ -176,7 +177,11 @@ export default new Vuex.Store({
       },
     ],
   },
-  mutations: {},
+  mutations: {
+    setUser(state, user){
+      state.user = user
+    },
+  },
   actions: {},
   modules: {},
 });
