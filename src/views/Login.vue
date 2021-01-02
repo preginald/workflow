@@ -8,10 +8,6 @@
       <v-form @submit.prevent="userLogin">
         <v-container>
           <v-row>
-            <v-col v-if="error">
-              {{ error.message }}
-            </v-col>
-
           </v-row>
           <v-row>
             <v-col cols="12" md="4">
