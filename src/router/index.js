@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import User from '../views/User.vue';
-import Test from '../views/Test.vue';
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import { auth } from '../firebase'
 
 Vue.use(VueRouter);
 
@@ -12,7 +8,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Home.vue'),
   },
   {
     path: '/test',
@@ -21,25 +18,29 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Test.vue'),
+      import(/* webpackChunkName: "test" */ '../views/Test.vue'),
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register,
+    component: () =>
+      import(/* webpackChunkName: "register" */ '../views/Register.vue'),
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () =>
+      import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
   {
     path: '/:userName',
-    component: User,
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/User.vue'),
   },
   {
     path: '/:userName/:docSlug',
-    component: Test,
+    component: () =>
+      import(/* webpackChunkName: "test" */ '../views/Test.vue'),
   },
 ];
 
@@ -47,5 +48,15 @@ const router = new VueRouter({
   mode: 'history',
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
+
+  if (requiresAuth && !auth.currentUser) {
+    next('/login')
+  } else {
+    next()
+  }
+})
 
 export default router;
