@@ -6,6 +6,7 @@
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
       <v-btn text to="/test">Test</v-btn>
+      <v-btn text to="/register">Register</v-btn>
       <v-spacer></v-spacer>
       <v-switch
         v-model="$vuetify.theme.dark"
