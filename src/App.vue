@@ -7,8 +7,8 @@
       <v-btn text to="/">Home</v-btn>
       <v-btn text to="/test">Test</v-btn>
       <v-spacer></v-spacer>
-      <template v-if="user"> 
-      <v-btn text @click="logOut">Sign out</v-btn>
+      <template v-if="userProfile"> 
+      <v-btn text @click="logout()">Sign out</v-btn>
       </template>
       <template v-else> 
       <v-btn text to="/login">Sign in</v-btn>
@@ -28,39 +28,41 @@
 </template>
 
 <script>
-import firebase from "firebase"
-import { mapState, mapMutations } from "vuex";
+// import firebase from "firebase"
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "App",
 
-  created(){
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setUser(user)
-      } else {
-        this.setUser(null)
-      }
-    });
+  // created(){
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       //this.setUserProfile(user)
+  //       this.fetchUserProfile(user)
+  //     } else {
+  //       this.setUserProfile(null)
+  //     }
+  //   });
 
-  },
+  // },
 
   computed: {
-    ...mapState(["user"])
+     ...mapState(["userProfile"])
   },
   components: {},
 
   data: () => ({
   }),
   methods: {
-    ...mapMutations(["setUser"]),
-    logOut() {
-      firebase.auth().signOut().then(() => {
-        firebase.auth().onAuthStateChanged(() => {
-          this.$router.push('/login')
-        })
-      })
-    }
+    ...mapMutations(["fetchUserProfile", "setUserProfile"]),
+    ...mapActions(["logout"]),
+    //logOut() {
+    //  firebase.auth().signOut().then(() => {
+    //    firebase.auth().onAuthStateChanged(() => {
+    //      this.$router.push('/login')
+    //    })
+    //  })
+    //}
   }
 
 };
