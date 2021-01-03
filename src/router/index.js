@@ -27,6 +27,12 @@ const routes = [
       import(/* webpackChunkName: "register" */ '../views/Register.vue'),
   },
   {
+    path: '/signup',
+    name: 'Signup',
+    component: () =>
+      import(/* webpackChunkName: "register" */ '../views/Signup.vue'),
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () =>
@@ -34,6 +40,7 @@ const routes = [
   },
   {
     path: '/:userName',
+    name: 'user',
     component: () =>
       import(/* webpackChunkName: "user" */ '../views/User.vue'),
   },
