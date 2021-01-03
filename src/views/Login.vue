@@ -50,7 +50,7 @@ export default {
       password: "",
       },
   }),
-  methods: 
+  methods: { 
     ...mapActions(['login']),
   },
 };
