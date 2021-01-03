@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h2 class="text-h6">
-        {{ users[0].name }}
+        {{ userProfile.username }}
       </h2>
     </v-col>
   </v-row>
@@ -12,7 +12,7 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["users"]),
+  computed: mapState(["userProfile"]),
   components: {},
   data: () => ({}),
   methods: {},

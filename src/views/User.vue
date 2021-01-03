@@ -2,7 +2,7 @@
   <v-container>
     <Heading />
     <v-row>
-      <v-list v-for="doc in users[0].docs" :key="doc.slug">
+      <v-list v-for="doc in userProfile.docs" :key="doc.slug">
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title
@@ -23,11 +23,11 @@ import { mapState } from "vuex";
 import Heading from "../../src/components/users/Heading";
 
 export default {
-  computed: mapState(["users"]),
+  computed: mapState(["userProfile"]),
   components: { Heading },
   methods: {
     docLink(doc) {
-      return this.users[0].name + "/" + doc.slug;
+      return this.userProfile.username + "/" + doc.slug;
     },
   },
 };
