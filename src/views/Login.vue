@@ -5,7 +5,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-form @submit.prevent="userLogin">
+      <v-form @submit.prevent>
         <v-container>
           <v-row>
           </v-row>
@@ -13,7 +13,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 type="email"
-                v-model="user.email"
+                v-model.trim="loginForm.email"
                 required
                 label="email"
               ></v-text-field>
@@ -21,12 +21,12 @@
             <v-col cols="12" md="4">
               <v-text-field
                 type="password"
-                v-model="user.password"
+                v-model.trim="loginForm.password"
                 label="password"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4">
-              <v-btn type="submit">Sign in</v-btn>
+              <v-btn @click="login(loginForm)">Sign in</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -40,29 +40,18 @@
 </template>
 
 <script>
-import firebase from "firebase"
+import { mapActions } from 'vuex'
 
 export default {
   name: "Login",
-  components: {},
   data: () => ({
-    user: {
+    loginForm: {
       email: "",
       password: "",
       },
   }),
   methods: {
-    userLogin() {
-      firebase
-      .auth()
-      .signInWithEmailAndPassword(this.user.email, this.user.password)
-      .then(() => {
-          this.$router.push('/')
-      })
-      .catch((error) => {
-          alert(error.message);
-      });
-    }
+    ...mapActions(['login']),
   },
 };
 </script>
