@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <Heading />
-    <v-row>
+    <v-row v-if="userProfile">
       <v-list v-for="doc in userProfile.docs" :key="doc.slug">
         <v-list-item>
           <v-list-item-content>
