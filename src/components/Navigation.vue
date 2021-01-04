@@ -1,17 +1,17 @@
 <template>
     <v-app-bar app dense>
-      <v-toolbar-title>Workflow</v-toolbar-title>
+      <v-toolbar-title>
+        <v-btn text to="/">Workflow</v-btn>
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn text to="/">Home</v-btn>
-      <v-btn text to="/test">Test</v-btn>
-      <v-spacer></v-spacer>
       <template v-if="nav"> 
-      <v-btn text @click="logout()">Sign out</v-btn>
+        <v-btn icon to="/new"><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn text @click="logout()">Sign out</v-btn>
       </template>
       <template v-else> 
-      <v-btn text to="/login">Sign in</v-btn>
-      <v-btn text to="/register">Sign up</v-btn>
+        <v-btn text to="/login">Sign in</v-btn>
+        <v-btn text to="/register">Sign up</v-btn>
       </template>
       <v-switch
         v-model="$vuetify.theme.dark"
@@ -35,5 +35,4 @@ export default {
     ...mapActions(["logout"]),
   }
 
-};
-</script>
+}; </script>
