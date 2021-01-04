@@ -21,6 +21,15 @@ const routes = [
       import(/* webpackChunkName: "test" */ '../views/Test.vue'),
   },
   {
+    path: '/new',
+    name: 'NewDoc',
+    component: () =>
+      import(/* webpackChunkName: "new" */ '../views/NewDoc.vue'),
+    meta: {
+      requiresAuth: true
+    } 
+  },
+  {
     path: '/signup',
     name: 'Signup',
     component: () =>
