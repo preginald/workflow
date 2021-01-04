@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h2 class="text-h6">
-        <router-link class="text-decoration-none" :to="docLink()">{{
+        <router-link class="text-decoration-none" :to="userLink(activeDoc.username)">{{
           activeDoc.username
         }}</router-link>
         /
@@ -13,16 +13,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({}),
   methods: {
-    docLink() {
-      return "/" + this.activeDoc.username;
-    },
+    ...mapActions(['userLink']),
   },
 };
 </script>
