@@ -3,7 +3,7 @@
     <v-form>
       <v-container>
         <v-row>
-          <v-col v-for="input in doc.inputs" :key="input.name" cols="12" sm="3">
+          <v-col v-for="input in activeDoc.inputs" :key="input.name" cols="12" sm="3">
             <v-text-field
               :label="input.label"
               v-model="input.value"
@@ -19,7 +19,7 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["doc"]),
+  computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({}),
 };

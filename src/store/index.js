@@ -166,6 +166,8 @@ export default new Vuex.Store({
         },
       ],
     },
+    userDocs: null,
+    activeDoc: {},
     users: [
       {
         name: 'preginald',
@@ -186,6 +188,12 @@ export default new Vuex.Store({
     },
     setUserProfile(state, user){
       state.userProfile = user
+    },
+    setUserDocs(state, docs) {
+      state.userDocs = docs
+    },
+    setActiveDoc(state, doc){
+      state.activeDoc = doc
     },
   },
   actions: {
@@ -211,7 +219,28 @@ export default new Vuex.Store({
       commit('setUserProfile', userProfile.data())
 
       // change route to dashboard
-       router.push({ name: 'user', params: { userName: userProfile.data().username}})
+      if (router.currentRoute.path === '/login') {
+        router.push({ name: 'user', params: { userName: userProfile.data().username}})
+      }
+    },
+    async fetchActiveDoc({ commit }, params){
+      // fetch active doc
+      fb.docsCollection
+        .where('username', '==', params.userName)
+        .where('slug', '==', params.docSlug)
+        .get()
+        .then(((querySnapshot) => {
+          const data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        // set active doc in state
+        commit('setActiveDoc',data[0])
+        }))
+    },
+    loadUserDoc({ commit }, doc) {
+      commit('setActiveDoc', doc)
+      router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
     async signup({ dispatch }, form){
       // sign user up

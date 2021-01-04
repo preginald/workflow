@@ -34,12 +34,13 @@ const routes = [
   },
   {
     path: '/:userName',
-    name: 'user',
+    name: 'UserHome',
     component: () =>
       import(/* webpackChunkName: "user" */ '../views/User.vue'),
   },
   {
     path: '/:userName/:docSlug',
+    name: 'UserDoc',
     component: () =>
       import(/* webpackChunkName: "test" */ '../views/Test.vue'),
   },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-for="step in doc.steps" :key="step.order">
+    <v-row v-for="step in activeDoc.steps" :key="step.order">
       <v-col>
         <h3>{{ step.title }}</h3>
         <v-row v-for="task in step.tasks" :key="task.order">
@@ -17,7 +17,7 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["doc"]),
+  computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({
     step: 1,
@@ -51,7 +51,7 @@ export default {
       }
     },
     getValue(name) {
-      let n = this.doc.inputs.find((e) => e.name == name);
+      let n = this.activeDoc.inputs.find((e) => e.name == name);
       return n.value;
     },
     taskInterpreterBackup(task) {

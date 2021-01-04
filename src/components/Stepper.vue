@@ -1,17 +1,17 @@
 <template>
   <v-stepper v-model="step">
     <v-stepper-header>
-      <template v-for="step in doc.steps">
+      <template v-for="step in activeDoc.steps">
         <v-stepper-step :key="step.order" :step="step.order" editable>
           {{ step.title }}
         </v-stepper-step>
         <v-divider
-          v-if="step.order !== doc.steps.length"
+          v-if="step.order !== activeDoc.steps.length"
           :key="step.title"
         ></v-divider>
       </template>
     </v-stepper-header>
-    <v-stepper-items v-for="step in doc.steps" :key="step.order">
+    <v-stepper-items v-for="step in activeDoc.steps" :key="step.order">
       <v-stepper-content :step="step.order">
         <v-row>
           <v-col>
@@ -32,7 +32,7 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["doc"]),
+  computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({
     step: 1,
@@ -66,7 +66,7 @@ export default {
       }
     },
     getValue(name) {
-      let n = this.doc.inputs.find((e) => e.name == name);
+      let n = this.activeDoc.inputs.find((e) => e.name == name);
       return n.value;
     },
     taskInterpreterBackup(task) {

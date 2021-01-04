@@ -1,24 +1,45 @@
 <template>
   <v-container>
     <Heading />
-    <Form />
+    <Form v-if="activeDoc" />
     <Flat />
-    <Stepper />
+    <Stepper v-if="false" />
   </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import { mapState } from "vuex";
+import { docsCollection } from  '../firebase'
+import { mapState, mapActions } from "vuex";
 import Heading from "@/components/documents/Heading";
 import Form from "@/components/Form";
 import Stepper from "@/components/Stepper";
-import Flat from "@/components/Flat";
+import Flat from "../components/Flat";
 
 export default {
-  computed: mapState(["doc"]),
+  computed: mapState(["activeDoc"]),
   name: "Home",
-  components: { Heading, Form, Stepper, Flat },
+  components: { 
+    Heading, 
+    Form, 
+    Stepper, 
+    Flat 
+  },
+  mounted() {
+  //  this.updateUserDoc(this.activeDoc)
+    if(typeof this.activeDoc.length == 'undefined'){
+      this.fetchActiveDoc(this.$route.params)
+    }
+  },
+  methods: {
+    ...mapActions(['fetchActiveDoc']),
+     async updateUserDoc(doc){
+      await docsCollection.doc(doc.id).update({
+        inputs: this.doc.inputs,
+        steps: this.doc.steps,
+      })
+
+    }
+  },
   data: () => ({
     // step: 1,
   }),
