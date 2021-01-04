@@ -4,25 +4,30 @@
       <v-col>
         <h3>{{ step.title }}</h3>
         <v-row v-for="task in step.tasks" :key="task.order">
-          <v-col>
+          <v-col md="6">
             <kbd> {{ taskInterpreter(task.title) }}</kbd>
+          </v-col>
+          <v-col md="6" v-if="isOwner">
+            <v-text-field v-model="task.title"></v-text-field>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+    <v-btn @click="updateSteps()">Update</v-btn>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
-  computed: mapState(["activeDoc"]),
+  computed: mapState(["activeDoc", "isOwner"]),
   components: {},
   data: () => ({
     step: 1,
   }),
   methods: {
+    ...mapActions(["updateSteps"]),
     taskInterpreter(task) {
       let n = task.search("<variable>");
       if (n == -1) {

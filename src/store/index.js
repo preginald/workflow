@@ -79,6 +79,12 @@ export default new Vuex.Store({
         commit('setActiveDoc',data[0])
         }))
     },
+    async updateSteps({state }){
+      // console.log(state.activeDoc.steps)
+      fb.docsCollection.doc(state.activeDoc.id).update({
+        steps: state.activeDoc.steps
+      })
+    },
     isOwner({ commit, state }){
       var uid = fb.auth.currentUser.uid
 
