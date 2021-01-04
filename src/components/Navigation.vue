@@ -11,7 +11,7 @@
       </template>
       <template v-else> 
         <v-btn text to="/login">Sign in</v-btn>
-        <v-btn text to="/register">Sign up</v-btn>
+        <!-- <v-btn text to="/register">Sign up</v-btn> -->
       </template>
       <v-switch
         v-model="$vuetify.theme.dark"
