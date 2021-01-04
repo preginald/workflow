@@ -1,4 +1,5 @@
 .DS_Store
+.firebase
 node_modules
 /dist
 
@@ -14,9 +15,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 debug.log
-
-# Cache files
-hosting.*.cache
 
 # Editor directories and files
 .idea
