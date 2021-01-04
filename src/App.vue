@@ -1,7 +1,7 @@
 <template>
   <v-app>
     
-    <Navigation v-if="showNav"></Navigation>
+    <Navigation></Navigation>
 
     <v-main>
       <router-view />
@@ -20,9 +20,6 @@ export default {
 
   computed: {
     ...mapState(["userProfile"]),
-    showNav(){
-      return Object.keys(this.userProfile).length > 1
-    },   
   },
 
   data: () => ({

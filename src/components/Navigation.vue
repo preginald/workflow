@@ -6,7 +6,7 @@
       <v-btn text to="/">Home</v-btn>
       <v-btn text to="/test">Test</v-btn>
       <v-spacer></v-spacer>
-      <template v-if="userProfile"> 
+      <template v-if="nav"> 
       <v-btn text @click="logout()">Sign out</v-btn>
       </template>
       <template v-else> 
@@ -29,7 +29,7 @@ export default {
   name: "Navigation",
 
   computed: {
-     ...mapState(["userProfile"])
+     ...mapState(["nav"])
   },
   methods: {
     ...mapActions(["logout"]),

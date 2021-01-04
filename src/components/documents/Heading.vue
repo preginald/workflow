@@ -2,11 +2,11 @@
   <v-row>
     <v-col>
       <h2 class="text-h6">
-        <router-link class="text-decoration-none" :to="docLink(doc)">{{
-          doc.username
+        <router-link class="text-decoration-none" :to="docLink()">{{
+          activeDoc.username
         }}</router-link>
         /
-        {{ doc.title }}
+        {{ activeDoc.title }}
       </h2>
     </v-col>
   </v-row>
@@ -16,12 +16,12 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["doc"]),
+  computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({}),
   methods: {
-    docLink(doc) {
-      return "/" + doc.username;
+    docLink() {
+      return "/" + this.activeDoc.username;
     },
   },
 };
