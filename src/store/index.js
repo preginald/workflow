@@ -98,6 +98,9 @@ export default new Vuex.Store({
       commit('setActiveDoc', doc)
       router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
+    userLink(username) {
+      return "/" + username;
+    },
     async signup({ dispatch }, form){
       // sign user up
       const { user } = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
