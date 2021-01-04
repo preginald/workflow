@@ -12,6 +12,7 @@ export default new Vuex.Store({
     userDocs: null,
     activeDoc: {},
     nav: false,
+    isOwner: false,
   },
   mutations: {
     setUser(state, user){
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     setNav( state, status ) {
       state.nav = status
+    },
+    setIsOwner( state, val ) {
+      state.isOwner = val
     },
   },
   actions: {
@@ -74,6 +78,15 @@ export default new Vuex.Store({
         // set active doc in state
         commit('setActiveDoc',data[0])
         }))
+    },
+    isOwner({ commit, state }){
+      var uid = fb.auth.currentUser.uid
+
+      if(uid) {
+        commit('setIsOwner', uid == state.activeDoc.uid)
+      } else {
+        commit('setIsOwner', false)
+      }
     },
     loadUserDoc({ commit }, doc) {
       commit('setActiveDoc', doc)
