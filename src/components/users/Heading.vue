@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h2 class="text-h6">
-        {{ activeDoc.username }}
+        {{ userProfile.username }}
       </h2>
     </v-col>
   </v-row>
@@ -12,9 +12,6 @@
 import { mapState } from "vuex";
 
 export default {
-  computed: mapState(["activeDoc"]),
-  components: {},
-  data: () => ({}),
-  methods: {},
+  computed: mapState(["userProfile"]),
 };
 </script>
