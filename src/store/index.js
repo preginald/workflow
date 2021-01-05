@@ -13,6 +13,7 @@ export default new Vuex.Store({
     activeDoc: {},
     nav: false,
     isOwner: false,
+    userLink: '',
   },
   mutations: {
     setUser(state, user){
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     setIsOwner( state, val ) {
       state.isOwner = val
+    },
+    setUserLink( state, val ) {
+      state.userLink = val
     },
   },
   actions: {
@@ -98,8 +102,12 @@ export default new Vuex.Store({
       commit('setActiveDoc', doc)
       router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
-    userLink(username) {
-      return "/" + username;
+    constructUserLink({ state, commit }) {
+      let username
+      if(state.userProfile) {
+        username = state.userProfile.username
+      }
+      commit('setUserLink', "/" + username);
     },
     async signup({ dispatch }, form){
       // sign user up
