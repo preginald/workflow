@@ -5,7 +5,7 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <template v-if="nav"> 
+      <template v-if="userProfile"> 
         <v-btn icon to="/new"><v-icon>mdi-plus</v-icon></v-btn>
         <v-btn text @click="logout()">Sign out</v-btn>
       </template>
@@ -29,7 +29,7 @@ export default {
   name: "Navigation",
 
   computed: {
-     ...mapState(["nav"])
+     ...mapState(["userProfile"])
   },
   methods: {
     ...mapActions(["logout"]),
