@@ -121,6 +121,16 @@ export default new Vuex.Store({
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
+    async addDoc({state},doc){
+      doc.username = state.userProfile.username
+      await fb.docsCollection.add(doc)
+        .then(docRef => {
+          console.log(docRef.id)
+        })
+        .catch(error => {
+          console.log("Error adding document: ", error)
+        })
+    },
   },
   modules: {},
 });
