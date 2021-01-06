@@ -42,7 +42,7 @@ const routes = [
     path: '/:userName/:docSlug',
     name: 'UserDoc',
     component: () =>
-      import(/* webpackChunkName: "test" */ '../views/Test.vue'),
+      import(/* webpackChunkName: "test" */ '../views/ReadDoc.vue'),
   },
 ];
 

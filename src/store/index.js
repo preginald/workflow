@@ -13,6 +13,7 @@ export default new Vuex.Store({
     activeDoc: {},
     nav: false,
     isOwner: false,
+    editDoc: false,
     userLink: '',
   },
   mutations: {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     setUserLink( state, val ) {
       state.userLink = val
+    },
+    setEditDoc( state, status) {
+      state.editDoc = status
     },
   },
   actions: {
@@ -68,9 +72,24 @@ export default new Vuex.Store({
         router.push({ name: 'UserHome', params: { userName: userProfile.data().username}})
       }
     },
-    async fetchActiveDoc({ commit }, params){
-      // fetch active doc
+    async fetchUserDocs({ commit }, params){
+      // fetch user docs
       fb.docsCollection
+        .where('username', '==', params.userName)
+        .get()
+        .then(((querySnapshot) => {
+          const data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        // set active doc in state
+        commit('setUserDocs',data)
+        }))
+    },
+    async fetchActiveDoc({ state, commit, dispatch }, params){
+      if(typeof state.activeDoc.length == 'undefined'){
+      // fetch active doc
+      await fb.docsCollection
         .where('username', '==', params.userName)
         .where('slug', '==', params.docSlug)
         .get()
@@ -79,18 +98,21 @@ export default new Vuex.Store({
             id: doc.id,
             ...doc.data(),
           }))
-        // set active doc in state
-        commit('setActiveDoc',data[0])
+          // set active doc in state
+          commit('setActiveDoc',data[0])
         }))
+      }
+      dispatch('isOwner')
+      dispatch('constructUserLink')
+
     },
     async updateSteps({state }){
-      // console.log(state.activeDoc.steps)
-      fb.docsCollection.doc(state.activeDoc.id).update({
+      await fb.docsCollection.doc(state.activeDoc.id).update({
         steps: state.activeDoc.steps
       })
     },
-    isOwner({ commit, state }){
-      var uid = fb.auth.currentUser.uid
+    async isOwner({ commit, state }){
+      var uid = await fb.auth.currentUser.uid
 
       if(uid) {
         commit('setIsOwner', uid == state.activeDoc.uid)
@@ -102,10 +124,18 @@ export default new Vuex.Store({
       commit('setActiveDoc', doc)
       router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
-    constructUserLink({ state, commit }) {
-      let username
+    toggleEditDoc({ state, commit }) {
+      commit('setEditDoc', !state.editDoc) 
+    },
+    constructUserLinkBackup({ state, commit }, username) {
       if(state.userProfile) {
         username = state.userProfile.username
+      }
+      commit('setUserLink', "/" + username);
+    },
+    constructUserLink({ state, commit }, username) {
+      if(state.activeDoc) {
+        username = state.activeDoc.username
       }
       commit('setUserLink', "/" + username);
     },
