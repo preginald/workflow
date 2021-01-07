@@ -1,12 +1,25 @@
 <template>
   <v-container>
     <v-row v-if="Object.keys(activeDoc).length">
+      <v-col>
+        <h2 class="text-h6">
+          <router-link class="text-decoration-none" :to="userLink">{{
+            activeDoc.username
+            }}</router-link>
+          <span v-if="activeDoc.title"> / </span >
+          <router-link class="text-decoration-none" :to="activeDoc.slug">{{
+            activeDoc.title
+            }}</router-link>
+        </h2>
+      </v-col>
+    </v-row>
+    <v-row v-if="Object.keys(activeDoc).length">
       <v-col sm="4" md="2">
         <v-card class="mb-1" v-if="editDoc">
           <v-card-actions>
             <v-row>
               <v-col>
-                <v-btn @click="addDoc(doc)">Save doc</v-btn>
+                <v-btn @click="updateDoc(activeDoc)">Update doc</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -30,7 +43,7 @@
             <v-btn @click="addInput()">Add input</v-btn>
           </v-card-actions>
         </v-card>
-        <v-card class="mt-3">
+        <v-card>
           <v-card-text>
             <v-row>
               <v-col v-for="input in activeDoc.inputs" :key="input.name" sm="12">
@@ -46,19 +59,6 @@
       </v-col>
 
       <v-col sm="8" md="10">
-        <v-row v-if="userProfile">
-          <v-col>
-            <h2 class="text-h6">
-              <router-link class="text-decoration-none" :to="userLink">{{
-                activeDoc.username
-                }}</router-link>
-              <span v-if="activeDoc.title"> / </span >
-              <router-link class="text-decoration-none" :to="activeDoc.slug">{{
-                activeDoc.title
-                }}</router-link>
-            </h2>
-          </v-col>
-        </v-row>
 
         <v-row v-if="editDoc">
           <v-col md="6" >
@@ -130,7 +130,7 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['constructUserLink','loadUserDoc']),
+    ...mapActions(['constructUserLink','loadUserDoc','updateDoc']),
     init(){
       this.loadUserDoc(this.$route.params)
       this.constructUserLink(this.activeDoc.username)
