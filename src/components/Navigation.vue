@@ -6,6 +6,7 @@
 
       <v-spacer></v-spacer>
       <template v-if="userProfile"> 
+        <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'UserDoc'"><v-icon>mdi-pencil-outline</v-icon></v-btn>
         <v-btn icon to="/new"><v-icon>mdi-plus</v-icon></v-btn>
         <v-btn text @click="logout()">Sign out</v-btn>
       </template>
@@ -29,10 +30,16 @@ export default {
   name: "Navigation",
 
   computed: {
-     ...mapState(["userProfile"])
+     ...mapState(["userProfile","isOwner"]),
   },
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["toggleEditDoc","logout"]),
+    init(){
+      console.log()
+    },
+  },
+  mounted() {
+    this.init()
   }
 
 }; </script>
