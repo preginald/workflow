@@ -86,7 +86,7 @@ export default new Vuex.Store({
     },
     async fetchUserDocs({ commit }, params){
       // fetch user docs
-      fb.docsCollection
+      await fb.docsCollection
         .where('username', '==', params.userName)
         .get()
         .then(((querySnapshot) => {
@@ -121,10 +121,10 @@ export default new Vuex.Store({
     loadUserDoc({ commit, dispatch }, doc) {
       if('uid' in doc){
         commit('setActiveDoc', doc)
+        router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
       } else {
         dispatch('fetchActiveDoc', doc)
       }
-      // router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
     async isOwner({ commit, state }){
       var currentUser = await fb.auth.currentUser
