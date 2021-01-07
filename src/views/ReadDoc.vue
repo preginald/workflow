@@ -146,7 +146,7 @@ export default {
       return task.split(/\r\n|\r|\n/).length
     },
     titleToSlug(){
-      this.activeDoc.slug = this.title.replace(/\s+/g, '-').toLowerCase();
+      this.activeDoc.slug = this.activeDoc.title.replace(/\s+/g, '-').toLowerCase();
     },
     inputLabelToName(){
       this.inputName = this.inputLabel.replace(/\s+/g, '-').toLowerCase();
