@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <Heading v-if="userDocs" />
+    <Heading />
   <v-card>
     <v-list-item two-line v-for="(doc, i) in userDocs" :key="i">
       <v-list-item-content>

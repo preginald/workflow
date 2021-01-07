@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row v-if="activeDoc">
+    <v-row v-if="Object.keys(activeDoc).length">
       <v-col sm="4" md="2">
         <v-card class="mb-1" v-if="editDoc">
           <v-card-actions>
@@ -50,9 +50,12 @@
           <v-col>
             <h2 class="text-h6">
               <router-link class="text-decoration-none" :to="userLink">{{
-                userProfile.username
+                activeDoc.username
                 }}</router-link>
-              <span v-if="activeDoc.title"> / {{ activeDoc.title }} </span >
+              <span v-if="activeDoc.title"> / </span >
+              <router-link class="text-decoration-none" :to="activeDoc.slug">{{
+                activeDoc.title
+                }}</router-link>
             </h2>
           </v-col>
         </v-row>
@@ -127,9 +130,10 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['constructUserLink','fetchActiveDoc']),
+    ...mapActions(['constructUserLink','loadUserDoc']),
     init(){
-      this.fetchActiveDoc(this.$route.params)
+      this.loadUserDoc(this.$route.params)
+      this.constructUserLink(this.activeDoc.username)
     },
     md(){
       if(this.editDoc) {

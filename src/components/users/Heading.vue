@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h2 class="text-h6">
-        {{ userProfile.username }}
+        {{ this.$route.params.userName }}
       </h2>
     </v-col>
   </v-row>

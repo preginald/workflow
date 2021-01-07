@@ -43,6 +43,18 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async signup({ dispatch }, form){
+      // sign user up
+      const { user } = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+
+      // create user profile object in userCollection
+      await fb.usersCollection.doc(user.uid).set({
+        username: form.username
+      })
+
+      // fetch user profile and set in state
+      dispatch('fetchUserProfile', user)
+    },
     async login({ commit, dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
@@ -106,23 +118,25 @@ export default new Vuex.Store({
       dispatch('constructUserLink')
 
     },
-    async updateSteps({state }){
-      await fb.docsCollection.doc(state.activeDoc.id).update({
-        steps: state.activeDoc.steps
-      })
+    loadUserDoc({ commit, dispatch }, doc) {
+      if('uid' in doc){
+        commit('setActiveDoc', doc)
+      } else {
+        dispatch('fetchActiveDoc', doc)
+      }
+      // router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
     },
     async isOwner({ commit, state }){
-      var uid = await fb.auth.currentUser.uid
-
-      if(uid) {
-        commit('setIsOwner', uid == state.activeDoc.uid)
+      var currentUser = await fb.auth.currentUser
+      if(currentUser){
+        var uid = currentUser.uid
+        if(uid) {
+          commit('setIsOwner', uid == state.activeDoc.uid)
+        }
       } else {
         commit('setIsOwner', false)
       }
-    },
-    loadUserDoc({ commit }, doc) {
-      commit('setActiveDoc', doc)
-      router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
+
     },
     toggleEditDoc({ state, commit }) {
       commit('setEditDoc', !state.editDoc) 
@@ -139,18 +153,6 @@ export default new Vuex.Store({
       }
       commit('setUserLink', "/" + username);
     },
-    async signup({ dispatch }, form){
-      // sign user up
-      const { user } = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
-
-      // create user profile object in userCollection
-      await fb.usersCollection.doc(user.uid).set({
-        username: form.username
-      })
-
-      // fetch user profile and set in state
-      dispatch('fetchUserProfile', user)
-    },
     async addDoc({state},doc){
       doc.username = state.userProfile.username
       await fb.docsCollection.add(doc)
@@ -160,6 +162,11 @@ export default new Vuex.Store({
         .catch(error => {
           console.log("Error adding document: ", error)
         })
+    },
+    async updateSteps({state }){
+      await fb.docsCollection.doc(state.activeDoc.id).update({
+        steps: state.activeDoc.steps
+      })
     },
   },
   modules: {},

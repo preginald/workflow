@@ -5,7 +5,7 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <template v-if="userProfile"> 
+      <template v-if="Object.keys(userProfile).length"> 
         <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'UserDoc'"><v-icon>mdi-pencil-outline</v-icon></v-btn>
         <v-btn icon to="/new"><v-icon>mdi-plus</v-icon></v-btn>
         <v-btn text @click="logout()">Sign out</v-btn>
