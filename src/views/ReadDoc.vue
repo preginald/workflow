@@ -269,7 +269,7 @@ export default {
   right: 0;
   color: #ccc;
   text-align: right;
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding: 5px 10px 0;
   line-height: 15px;
   height: 15px;
