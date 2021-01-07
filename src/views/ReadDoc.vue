@@ -89,7 +89,7 @@
                     <v-toolbar>
                       <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
                     </v-toolbar>
-                    <v-textarea v-model="task.title" :hint="taskTitleInputHint" rows="1"></v-textarea>
+                    <v-textarea v-model="task.title" :hint="taskTitleInputHint" :rows="rows(task.title)"></v-textarea>
                   </v-col>
                   <v-col sm=12 :md="md()" lg="6">
                     <v-sheet elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
@@ -142,8 +142,8 @@ export default {
         return 12
       }
     },
-    saveNewDoc(){
-      console.log(this.activeDoc)
+    rows(task){
+      return task.split(/\r\n|\r|\n/).length
     },
     titleToSlug(){
       this.activeDoc.slug = this.title.replace(/\s+/g, '-').toLowerCase();
