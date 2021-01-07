@@ -23,6 +23,9 @@ export default new Vuex.Store({
     setUserProfile(state, user){
       state.userProfile = user
     },
+    setUidToUserProfile(state, uid){
+      state.userProfile.uid = uid
+    },
     setUserDocs(state, docs) {
       state.userDocs = docs
     },
@@ -78,6 +81,9 @@ export default new Vuex.Store({
 
       // set user profile in state
       commit('setUserProfile', userProfile.data())
+
+      // set uid to user profile in state
+      commit('setUidToUserProfile', user.uid)
 
       // change route to dashboard
       if (router.currentRoute.path === '/login') {
@@ -154,6 +160,17 @@ export default new Vuex.Store({
       commit('setUserLink', "/" + username);
     },
     async addDoc({state},doc){
+      doc.username = state.userProfile.username
+      doc.uid = state.userProfile.uid
+      await fb.docsCollection.add(doc)
+        .then(docRef => {
+          console.log(docRef.id)
+        })
+        .catch(error => {
+          console.log("Error adding document: ", error)
+        })
+    },
+    async saveDraftDoc({state},doc){
       doc.username = state.userProfile.username
       await fb.docsCollection.add(doc)
         .then(docRef => {

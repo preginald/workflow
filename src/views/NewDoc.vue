@@ -1,12 +1,25 @@
 <template>
   <v-container>
+        <v-row v-if="Object.keys(userProfile).length">
+          <v-col>
+            <h2 class="text-h6">
+              <router-link class="text-decoration-none" :to="userLink">{{
+                userProfile.username
+                }}</router-link>
+              <template v-if="doc.title"> / {{ doc.title }} </template >
+            </h2>
+          </v-col>
+        </v-row>
     <v-row>
       <v-col md="2">
         <v-card class="mb-1">
           <v-card-actions>
             <v-row>
               <v-col>
-                <v-btn @click="addDoc(doc)">Save doc</v-btn>
+                <v-btn @click="saveDraftDoc(doc)">Save draft</v-btn>
+              </v-col>
+              <v-col>
+                <v-btn @click="addDoc(doc)">Publish</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -48,21 +61,11 @@
       </v-col>
 
       <v-col md="10">
-        <v-row v-if="userProfile">
-          <v-col>
-            <h2 class="text-h6">
-              <router-link class="text-decoration-none" :to="userLink">{{
-                userProfile.username
-                }}</router-link>
-              <template v-if="doc.title"> / {{ title }} </template >
-            </h2>
-          </v-col>
-        </v-row>
         <h1 class="text-h5">Create a new document</h1>
         <p> A document consists of steps and tasks </p>
     <v-row>
       <v-col md="6">
-        <v-text-field label="Title" v-model="title"></v-text-field>
+        <v-text-field label="Title" v-model="doc.title" v-on:keyup="titleToSlug()"></v-text-field>
         <v-text-field label="Slug" v-model="doc.slug"></v-text-field>
         <v-textarea label="Description" v-model="doc.description"></v-textarea>
       </v-col>
@@ -129,7 +132,7 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['constructUserLink','addDoc']),
+    ...mapActions(['constructUserLink','saveDraftDoc','addDoc']),
     init(){
       this.constructUserLink()
     },
@@ -137,7 +140,7 @@ export default {
       console.log(this.doc)
     },
     titleToSlug(){
-      this.doc.slug = this.title.replace(/\s+/g, '-').toLowerCase();
+      this.doc.slug = this.doc.title.replace(/\s+/g, '-').toLowerCase();
     },
     inputLabelToName(){
       this.inputName = this.inputLabel.replace(/\s+/g, '-').toLowerCase();
