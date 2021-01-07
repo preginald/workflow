@@ -163,6 +163,17 @@ export default new Vuex.Store({
           console.log("Error adding document: ", error)
         })
     },
+    async updateDoc({ commit },doc){
+      await fb.docsCollection.doc(doc.id)
+        .update(doc)
+        .then(() => {
+          console.log("Document successfully updated!")
+        })
+        .catch(error => {
+          console.log("Error updating document: ", error)
+        })
+      commit('setActiveDoc', doc)
+    },
     async updateSteps({state }){
       await fb.docsCollection.doc(state.activeDoc.id).update({
         steps: state.activeDoc.steps
