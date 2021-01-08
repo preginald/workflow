@@ -1,8 +1,11 @@
 <template>
     <v-app-bar app dense>
-      <v-toolbar-title>
-        <v-btn text to="/">Workflow</v-btn>
-      </v-toolbar-title>
+      <template v-if="Object.keys(userProfile).length"> 
+        <v-btn text :to="userLink"><v-icon>mdi-home-account</v-icon></v-btn>
+      </template>
+      <template v-else>
+        <v-btn text to="/"><v-icon>mdi-home</v-icon></v-btn>
+      </template>
 
       <v-spacer></v-spacer>
       <template v-if="Object.keys(userProfile).length"> 
@@ -30,7 +33,7 @@ export default {
   name: "Navigation",
 
   computed: {
-     ...mapState(["userProfile","isOwner"]),
+     ...mapState(["userProfile","isOwner","userLink"]),
   },
   methods: {
     ...mapActions(["toggleEditDoc","logout"]),
