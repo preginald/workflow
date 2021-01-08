@@ -132,9 +132,8 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['constructUserLink','saveDraftDoc','addDoc']),
+    ...mapActions(['saveDraftDoc','addDoc']),
     init(){
-      this.constructUserLink()
     },
     saveNewDoc(){
       console.log(this.doc)
