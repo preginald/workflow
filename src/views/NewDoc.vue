@@ -11,15 +11,15 @@
           </v-col>
         </v-row>
     <v-row>
-      <v-col md="2">
+      <v-col sm="4" md="2">
         <v-card class="mb-1">
           <v-card-actions>
             <v-row>
               <v-col>
-                <v-btn @click="saveDraftDoc(doc)">Save draft</v-btn>
+                <v-btn @click="saveDraft(doc)">Save draft</v-btn>
               </v-col>
               <v-col>
-                <v-btn @click="addDoc(doc)">Publish</v-btn>
+                <v-btn @click="publish(doc)">Publish</v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -28,83 +28,81 @@
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
             <v-row>
-            <v-col sm="12">
-              <v-text-field label="label" v-model="inputLabel"></v-text-field>
-            </v-col>
+              <v-col sm="12">
+                <v-text-field label="label" v-model="inputLabel"></v-text-field>
+              </v-col>
               <v-col sm="12">
                 <v-text-field label="name" v-model="inputName"></v-text-field>
               </v-col>
               <v-col sm="12">
                 <v-text-field label="value" v-model="inputValue"></v-text-field>
               </v-col>
-              <v-col sm="12">
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="addInput()">Add input</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-card class="mt-3" v-if="doc.inputs.length">
+          <v-card-text>
+            <v-row>
+              <v-col v-for="input in doc.inputs" :key="input.name" sm="12">
+                <v-text-field
+              :label="input.label"
+              v-model="input.value"
+              :hint="input.name">
+                </v-text-field>
               </v-col>
             </v-row>
           </v-card-text>
-        <v-card-actions>
-        <v-btn @click="addInput()">Add input</v-btn>
-      </v-card-actions>
-    </v-card>
-    <v-card class="mt-3" v-if="doc.inputs.length">
-      <v-card-text>
-        <v-row>
-          <v-col v-for="input in doc.inputs" :key="input.name" sm="12">
-            <v-text-field
-              :label="input.label"
-              v-model="input.value"
-              :hint="input.name"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+        </v-card>
       </v-col>
 
-      <v-col md="10">
+      <v-col sm="8" md="10">
         <h1 class="text-h5">Create a new document</h1>
         <p> A document consists of steps and tasks </p>
-    <v-row>
-      <v-col md="6">
-        <v-text-field label="Title" v-model="doc.title" v-on:keyup="titleToSlug()"></v-text-field>
-        <v-text-field label="Slug" v-model="doc.slug"></v-text-field>
-        <v-textarea label="Description" v-model="doc.description"></v-textarea>
-      </v-col>
-    </v-row>
+        <v-row>
+          <v-col md="6">
+            <v-text-field label="Title" v-model="doc.title" v-on:keyup="titleToSlug()"></v-text-field>
+            <v-text-field label="Slug" v-model="doc.slug"></v-text-field>
+            <v-textarea label="Description" v-model="doc.description"></v-textarea>
+          </v-col>
+        </v-row>
         <v-card v-for="(step, i) in doc.steps" v-bind:key="i" class="mb-3">
           <v-app-bar flat>
-              <v-toolbar-title>{{stepNumber(i)}} {{ step.title}}</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
-            </v-app-bar>
+            <v-toolbar-title>{{stepNumber(i)}} {{ step.title}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
+          </v-app-bar>
           <v-card-text>
             <v-row>
-              <v-col md="6">
+              <v-col sm="12" md="md()" lg="6">
                 <v-text-field label="Title" v-model="step.title"></v-text-field>
                 <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
               </v-col>
             </v-row>
-              <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey">
-                <v-card-text>
-                  <v-row>
-                <v-col md="6">
-                <v-toolbar>
-                  <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
-                </v-toolbar>
-                  <v-textarea v-model="task.title" :hint="taskTitleInputHint" rows="1"></v-textarea>
-                </v-col>
-                <v-col md="6">
-                  <v-sheet elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
-                </v-col>
-                  </v-row>
-                </v-card-text>
-                <v-card-actions> 
-                  <v-row>
-                    <v-col md="2">
-                      <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-card-actions>
-              </v-card>
+            <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey">
+              <v-card-text>
+                <v-row>
+                  <v-col md="6">
+                    <v-toolbar>
+                      <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
+                    </v-toolbar>
+                    <v-textarea v-model="task.title" :hint="taskTitleInputHint" :rows="rows(task.title)"></v-textarea>
+                  </v-col>
+                  <v-col sm=12 :md="md()" lg="6">
+                    <v-sheet elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions> 
+                <v-row>
+                  <v-col md="2">
+                    <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card>
             <v-card-actions>
               <v-btn v-if="i == (doc.steps.length - 1)" @click="addStep()">Add step</v-btn>
             </v-card-actions>
@@ -112,6 +110,7 @@
         </v-card>
 
       </v-col>
+
     </v-row>
 
 
@@ -132,11 +131,26 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['saveDraftDoc','addDoc']),
+    ...mapActions(['createDoc']),
     init(){
     },
-    saveNewDoc(){
-      console.log(this.doc)
+    md(){
+      if(this.editDoc) {
+        return 6
+      } else {
+        return 12
+      }
+    },
+    rows(task){
+      return task.split(/\r\n|\r|\n/).length
+    },
+    publish(){
+      this.doc.status = 'publish'
+      this.createDoc(this.doc)
+    },
+    saveDraft(){
+      this.doc.status = 'draft'
+      this.createDoc(this.doc)
     },
     titleToSlug(){
       this.doc.slug = this.doc.title.replace(/\s+/g, '-').toLowerCase();
@@ -184,9 +198,8 @@ export default {
             let value = this.getValue(variable);
             newTask += e.replace(openTag+ variable, value);
           }
-        });
-        return newTask;
-
+        })
+          return newTask;
         }
       }
     },
@@ -246,6 +259,10 @@ export default {
 
 .js::before {
   content: "JS";
+}
+
+.mysql::before {
+  content: "MySQL";
 }
 
 .bash::before {

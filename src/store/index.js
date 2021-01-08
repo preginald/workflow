@@ -58,14 +58,13 @@ export default new Vuex.Store({
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
-    async login({ commit, dispatch }, form) {
+    async login({ dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
       
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
 
-      commit('setNav', true)
     },
     async logout({ commit }){
       await fb.auth.signOut()
@@ -84,6 +83,9 @@ export default new Vuex.Store({
 
       // set uid to user profile in state
       commit('setUidToUserProfile', user.uid)
+
+      // set user nav in state
+      commit('setNav', true)
 
       dispatch('constructUserLink')
 
@@ -156,22 +158,17 @@ export default new Vuex.Store({
       }
       commit('setUserLink', "/" + username);
     },
-    async addDoc({state},doc){
+    async createDoc({state, commit },doc){
       doc.username = state.userProfile.username
       doc.uid = state.userProfile.uid
+      const editStatus = doc.status == 'draft' ? true : false
+
       await fb.docsCollection.add(doc)
         .then(docRef => {
-          console.log(docRef.id)
-        })
-        .catch(error => {
-          console.log("Error adding document: ", error)
-        })
-    },
-    async saveDraftDoc({state},doc){
-      doc.username = state.userProfile.username
-      await fb.docsCollection.add(doc)
-        .then(docRef => {
-          console.log(docRef.id)
+          console.log('Saved doc: ', docRef.id)
+          commit('setActiveDoc', doc)
+          commit('setEditDoc', editStatus) 
+          router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
         })
         .catch(error => {
           console.log("Error adding document: ", error)
