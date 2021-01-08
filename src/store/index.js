@@ -73,7 +73,7 @@ export default new Vuex.Store({
       // clear userProfile and redirect to /login
       commit('setUserProfile', null )
       commit('setNav', false)
-      // router.push('/login')
+      router.push('/login')
     },
     async fetchUserProfile({ commit, dispatch }, user){
       // fetch user profile
