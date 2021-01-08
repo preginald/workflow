@@ -5,14 +5,14 @@
     <v-list dense>
       <v-subheader>Subheader</v-subheader>
       <v-list-item-group v-model="selected">
-        <v-list-item two-line v-for="(doc, i) in userDocs" :key="i">
+        <v-list-item @click.prevent="loadUserDoc(doc)" two-line v-for="(doc, i) in userDocs" :key="i">
           <v-list-item-icon>
             <v-icon v-text="status(doc.status)"></v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title>
-              <a @click.prevent="loadUserDoc(doc)" :href="docLink(doc)">{{
+              <a  :href="docLink(doc)">{{
                 doc.title
               }}</a>
             </v-list-item-title>
