@@ -185,6 +185,20 @@ export default new Vuex.Store({
           console.log("Error removing document: ", error)
         })
     },
+    async softDeleteDoc({ commit },doc){
+      await fb.docsCollection.doc(doc.id)
+        .update({
+          status: 'delete'
+        })
+        .then(() => {
+          console.log("Document successfully updated!")
+          doc.status = "delete"
+        })
+        .catch(error => {
+          console.log("Error updating document: ", error)
+        })
+      commit('setActiveDoc', doc)
+    },
     async updateDoc({ commit },doc){
       await fb.docsCollection.doc(doc.id)
         .update(doc)

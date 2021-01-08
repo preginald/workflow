@@ -22,7 +22,8 @@
                 <v-btn @click="updateDoc(activeDoc)">Update doc</v-btn>
               </v-col>
               <v-col>
-                <v-btn @click="deleteDoc(activeDoc)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                <v-btn v-else @click="softDeleteDoc(activeDoc)"><v-icon>mdi-recycle</v-icon></v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -133,7 +134,7 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['loadUserDoc','updateDoc','deleteDoc']),
+    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc']),
     init(){
       this.loadUserDoc(this.$route.params)
     },
