@@ -21,6 +21,9 @@
               <v-col>
                 <v-btn @click="updateDoc(activeDoc)">Update doc</v-btn>
               </v-col>
+              <v-col>
+                <v-btn @click="deleteDoc(activeDoc)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+              </v-col>
             </v-row>
           </v-card-actions>
         </v-card>
@@ -130,7 +133,7 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['loadUserDoc','updateDoc']),
+    ...mapActions(['loadUserDoc','updateDoc','deleteDoc']),
     init(){
       this.loadUserDoc(this.$route.params)
     },

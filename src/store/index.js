@@ -174,6 +174,17 @@ export default new Vuex.Store({
           console.log("Error adding document: ", error)
         })
     },
+    async deleteDoc({commit}, doc) {
+      await fb.docsCollection.doc(doc.id).delete()
+        .then(() =>{
+          console.log("Document successfully deleted!")
+          router.push({ name: 'UserHome', params: { userName: doc.username} })
+          commit('setActiveDoc', {})
+        })
+        .catch((error) => {
+          console.log("Error removing document: ", error)
+        })
+    },
     async updateDoc({ commit },doc){
       await fb.docsCollection.doc(doc.id)
         .update(doc)
