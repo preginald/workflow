@@ -75,7 +75,7 @@ export default new Vuex.Store({
       commit('setNav', false)
       // router.push('/login')
     },
-    async fetchUserProfile({ commit }, user){
+    async fetchUserProfile({ commit, dispatch }, user){
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get()
 
@@ -84,6 +84,8 @@ export default new Vuex.Store({
 
       // set uid to user profile in state
       commit('setUidToUserProfile', user.uid)
+
+      dispatch('constructUserLink')
 
       // change route to dashboard
       if (router.currentRoute.path === '/login') {
@@ -147,15 +149,11 @@ export default new Vuex.Store({
     toggleEditDoc({ state, commit }) {
       commit('setEditDoc', !state.editDoc) 
     },
-    constructUserLinkBackup({ state, commit }, username) {
-      if(state.userProfile) {
-        username = state.userProfile.username
-      }
-      commit('setUserLink', "/" + username);
-    },
     constructUserLink({ state, commit }, username) {
-      if(state.activeDoc) {
+      if('username' in state.activeDoc) {
         username = state.activeDoc.username
+      } else if ('username' in state.userProfile) {
+        username = state.userProfile.username
       }
       commit('setUserLink', "/" + username);
     },
