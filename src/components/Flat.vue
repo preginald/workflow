@@ -21,13 +21,19 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
-  computed: mapState(["activeDoc", "isOwner"]),
+  computed: mapState(["activeDoc"]),
   components: {},
   data: () => ({
     step: 1,
   }),
+  mounted() {
+    this.init()
+  },
   methods: {
-    ...mapActions(["updateSteps"]),
+    ...mapActions(["updateSteps", "isOwner"]),
+    init(){
+      this.isOwner()
+    },
     taskInterpreter(task) {
       let n = task.search("<variable>");
       if (n == -1) {

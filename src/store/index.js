@@ -123,7 +123,6 @@ export default new Vuex.Store({
         }))
       }
       dispatch('isOwner')
-      dispatch('constructUserLink')
 
     },
     loadUserDoc({ commit, dispatch }, doc) {

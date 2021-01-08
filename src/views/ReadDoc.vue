@@ -130,10 +130,9 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['constructUserLink','loadUserDoc','updateDoc']),
+    ...mapActions(['loadUserDoc','updateDoc']),
     init(){
       this.loadUserDoc(this.$route.params)
-      this.constructUserLink(this.activeDoc.username)
     },
     md(){
       if(this.editDoc) {
