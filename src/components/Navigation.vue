@@ -17,8 +17,8 @@
         <v-btn icon to="/login"><v-icon>mdi-login-variant</v-icon></v-btn>
         <!-- <v-btn text to="/register">Sign up</v-btn> -->
       </template>
-        <v-btn v-if="$vuetify.theme.dark == 'Dark'" icon @click.prevent="$vuetify.theme.dark = 'Light'"><v-icon>mdi-toggle-switch</v-icon></v-btn>
-        <v-btn v-else icon @click.prevent="$vuetify.theme.dark = 'Dark'"><v-icon>mdi-toggle-switch-off-outline</v-icon></v-btn>
+        <v-btn v-if="$vuetify.theme.dark" icon @click.prevent="toggleDarkMode"><v-icon>mdi-toggle-switch</v-icon></v-btn>
+        <v-btn v-else icon @click.prevent="toggleDarkMode"><v-icon>mdi-toggle-switch-off-outline</v-icon></v-btn>
     </v-app-bar>
 
 </template>
@@ -37,6 +37,10 @@ export default {
     init(){
       console.log()
     },
+    toggleDarkMode(){
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      
+    }
   },
   mounted() {
     this.init()
