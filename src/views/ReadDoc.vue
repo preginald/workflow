@@ -66,8 +66,8 @@
 
         <v-row v-if="editDoc">
           <v-col md="6" >
-            <v-text-field label="Title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
-            <v-text-field label="Slug" v-model="activeDoc.slug"></v-text-field>
+            <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
+            <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
             <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
           </v-col>
         </v-row>
@@ -139,8 +139,13 @@ export default {
       this.loadUserDoc(this.$route.params)
     },
     disabled(){
-      console.log(this.docValidation.slug)
-      return  this.docValidation.slug ? 'disabled': false
+      if(this.docValidation.slug){
+        this.slugHint = "Slug already exists"
+        return  'disabled'
+      } else {
+        this.slugHint = null
+        return  false
+      }
     },
     md(){
       if(this.editDoc) {
@@ -232,6 +237,17 @@ export default {
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
     taskTypes: ['bash', 'js', 'mysql'],
+    slugHint: '',
+    rules: {
+      title:[
+        (value) => !!value || "Required",
+        (value) => value.length < 50 || "Max 50 characters",
+      ],
+      slug:[
+        (value) => !!value || "Required",
+        (value) => value.length < 50 || "Max 50 characters",
+      ],
+    },
     doc: {
       title: '',
       slug: '',
