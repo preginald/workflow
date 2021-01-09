@@ -10,6 +10,7 @@ export default new Vuex.Store({
     user: null,
     userProfile: {},
     userDocs: null,
+    docSluts: null,
     activeDoc: {},
     nav: false,
     isOwner: false,
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     setUserDocs(state, docs) {
       state.userDocs = docs
+    },
+    setDocSlugs(state, docSlugs) {
+      state.docSlugs = docSlugs
     },
     setActiveDoc(state, doc){
       state.activeDoc = doc
@@ -108,6 +112,11 @@ export default new Vuex.Store({
             id: doc.id,
             ...doc.data(),
           }))
+          const docSlugs = data.map(doc =>({
+            id: doc.id, slug: doc.slug
+          }))
+
+        commit('setDocSlugs', docSlugs)
         // set active doc in state
         commit('setUserDocs',data)
         }))
@@ -220,12 +229,12 @@ export default new Vuex.Store({
       })
     },
     async slugCheck({ state, commit }) {
-      if(state.userDocs){
-        let result = state.userDocs.some(doc => {
+      if(state.docSlugs){
+        let result = state.docSlugs.some(doc => {
           // console.log(payload.slug)
           return doc.slug === state.activeDoc.slug && doc.id != state.activeDoc.id
         })
-        if(result){ commit('setValidDocSlug', result) }
+        commit('setValidDocSlug', result) 
       } else {
         commit('setValidDocSlug', true)
       }
