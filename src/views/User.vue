@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <Heading />
-  <v-card>
+  <v-card v-if="userDocs">
     <v-list dense>
-      <v-subheader>Subheader</v-subheader>
+      <v-subheader>{{ userDocs.length }} docs</v-subheader>
       <v-list-item-group v-model="selected">
         <v-list-item @click.prevent="loadUserDoc(doc)" two-line v-for="(doc, i) in userDocs" :key="i">
           <v-list-item-icon>
@@ -21,6 +21,9 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
+  </v-card>
+  <v-card v-else>
+    <v-icon class="mdi-spin">mdi-loading</v-icon>
   </v-card>
      <!-- <div @click="uetchUserDocs()">{{ docs }}</div> -->
   </v-container>
