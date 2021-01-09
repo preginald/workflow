@@ -141,6 +141,7 @@ export default new Vuex.Store({
 
     },
     loadUserDoc({ commit, dispatch }, doc) {
+      commit('setValidDocSlug', false)
       if('uid' in doc){
         commit('setActiveDoc', doc)
         router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
