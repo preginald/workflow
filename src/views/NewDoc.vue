@@ -232,7 +232,7 @@ export default {
     inputValue: '',
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
-    taskTypes: ['bash', 'js', 'mysql'],
+    taskTypes: ['bash','html','js','mysql','yml'],
     doc: {
       title: '',
       slug: '',
@@ -255,6 +255,14 @@ export default {
   padding: 1.2em 1.4em;
   font-size: 0.85rem;
   position: relative;
+}
+
+.html::before {
+  content: "HTML";
+}
+
+.yml::before {
+  content: "YML";
 }
 
 .js::before {

@@ -16,7 +16,7 @@
             </v-row>
           </v-card-actions>
         </v-card>
-        <v-card v-if="editDoc">
+        <v-card v-if="editDoc" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
             <v-row>
@@ -83,7 +83,7 @@
                     </v-toolbar>
                     <v-textarea v-model="task.title" :hint="taskTitleInputHint" :rows="rows(task.title)"></v-textarea>
                   </v-col>
-                  <v-col sm=12 :md="md()" lg="6">
+                  <v-col sm=12 :md="md()" lg="12">
                     <v-sheet v-clipboard:copy="taskInterpreter(task.title)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
                   </v-col>
                 </v-row>
@@ -232,7 +232,7 @@ export default {
     inputValue: '',
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
-    taskTypes: ['bash', 'js', 'mysql'],
+    taskTypes: ['bash','html','js','mysql','yml'],
     slugHint: '',
     rules: {
       title:[
@@ -266,6 +266,14 @@ export default {
   padding: 1.2em 1.4em;
   font-size: 0.85rem;
   position: relative;
+}
+
+.html::before {
+  content: "HTML";
+}
+
+.yml::before {
+  content: "YML";
 }
 
 .js::before {
