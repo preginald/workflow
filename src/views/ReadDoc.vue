@@ -1,18 +1,6 @@
 <template>
   <v-container>
-    <v-row v-if="Object.keys(activeDoc).length">
-      <v-col>
-        <h2 class="text-h6">
-          <router-link class="text-decoration-none" :to="userLink">{{
-            activeDoc.username
-            }}</router-link>
-          <span v-if="activeDoc.title"> / </span >
-          <router-link class="text-decoration-none" :to="activeDoc.slug">{{
-            activeDoc.title
-            }}</router-link>
-        </h2>
-      </v-col>
-    </v-row>
+    <Heading />
     <v-row v-if="Object.keys(activeDoc).length">
       <v-col sm="4" md="2">
         <v-card class="mb-1" v-if="editDoc">
@@ -96,7 +84,7 @@
                     <v-textarea v-model="task.title" :hint="taskTitleInputHint" :rows="rows(task.title)"></v-textarea>
                   </v-col>
                   <v-col sm=12 :md="md()" lg="6">
-                    <v-sheet elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
+                    <v-sheet v-clipboard:copy="taskInterpreter(task.title)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -122,6 +110,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import Heading from "../components/documents/Heading";
 
 export default {
   computed: {
@@ -129,6 +118,7 @@ export default {
   },
   name: "Home",
   components: { 
+    Heading, 
   },
   mounted() {
     this.init()
@@ -137,6 +127,12 @@ export default {
     ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck']),
     init(){
       this.loadUserDoc(this.$route.params)
+    },
+    onCopy() {
+      console.log('You just copied')
+    },
+    onError() {
+      console.log('Error copy')
     },
     disabled(){
       if(this.docValidation.slug){
