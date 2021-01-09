@@ -17,11 +17,8 @@
         <v-btn icon to="/login"><v-icon>mdi-login-variant</v-icon></v-btn>
         <!-- <v-btn text to="/register">Sign up</v-btn> -->
       </template>
-      <v-switch
-        v-model="$vuetify.theme.dark"
-        :label="$vuetify.theme.dark ? 'Dark' : 'Light'"
-        hide-details
-      ></v-switch>
+        <v-btn v-if="$vuetify.theme.dark == 'Dark'" icon @click.prevent="$vuetify.theme.dark = 'Light'"><v-icon>mdi-toggle-switch</v-icon></v-btn>
+        <v-btn v-else icon @click.prevent="$vuetify.theme.dark = 'Dark'"><v-icon>mdi-toggle-switch-off-outline</v-icon></v-btn>
     </v-app-bar>
 
 </template>
