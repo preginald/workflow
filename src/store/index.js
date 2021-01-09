@@ -15,6 +15,7 @@ export default new Vuex.Store({
     isOwner: false,
     editDoc: false,
     userLink: '',
+    docValidation: {slug: false},
   },
   mutations: {
     setUser(state, user){
@@ -43,6 +44,9 @@ export default new Vuex.Store({
     },
     setEditDoc( state, status) {
       state.editDoc = status
+    },
+    setValidDocSlug( state, status) {
+      state.docValidation.slug = status
     },
   },
   actions: {
@@ -214,6 +218,17 @@ export default new Vuex.Store({
       await fb.docsCollection.doc(state.activeDoc.id).update({
         steps: state.activeDoc.steps
       })
+    },
+    async slugCheck({ state, commit }) {
+      if(state.userDocs){
+        let result = state.userDocs.some(doc => {
+          // console.log(payload.slug)
+          return doc.slug === state.activeDoc.slug && doc.id != state.activeDoc.id
+        })
+        if(result){ commit('setValidDocSlug', result) }
+      } else {
+        commit('setValidDocSlug', true)
+      }
     },
   },
   modules: {},

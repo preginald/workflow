@@ -19,7 +19,7 @@
           <v-card-actions>
             <v-row>
               <v-col>
-                <v-btn @click="updateDoc(activeDoc)">Update doc</v-btn>
+                <v-btn :disabled="disabled()" @click="updateDoc(activeDoc)">Update doc</v-btn>
               </v-col>
               <v-col>
                 <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
@@ -66,7 +66,7 @@
 
         <v-row v-if="editDoc">
           <v-col md="6" >
-            <v-text-field label="Title" v-model="activeDoc.title"></v-text-field>
+            <v-text-field label="Title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
             <v-text-field label="Slug" v-model="activeDoc.slug"></v-text-field>
             <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
           </v-col>
@@ -125,7 +125,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "editDoc"]),
+    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "editDoc","docValidation"]),
   },
   name: "Home",
   components: { 
@@ -134,9 +134,13 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc']),
+    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck']),
     init(){
       this.loadUserDoc(this.$route.params)
+    },
+    disabled(){
+      console.log(this.docValidation.slug)
+      return  this.docValidation.slug ? 'disabled': false
     },
     md(){
       if(this.editDoc) {
@@ -150,6 +154,7 @@ export default {
     },
     titleToSlug(){
       this.activeDoc.slug = this.activeDoc.title.replace(/\s+/g, '-').toLowerCase();
+      this.slugCheck(this.activeDoc.slug)
     },
     inputLabelToName(){
       this.inputName = this.inputLabel.replace(/\s+/g, '-').toLowerCase();
@@ -215,9 +220,6 @@ export default {
     },
   },
   watch: {
-    title(){
-      this.titleToSlug()
-    },
     inputLabel(){
       this.inputLabelToName()
     },
