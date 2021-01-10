@@ -95,7 +95,7 @@ export default new Vuex.Store({
       // set user nav in state
       commit('setNav', true)
 
-      dispatch('constructUserLink')
+      dispatch('constructUserLink',userProfile.data().username)
 
       // change route to dashboard
       if (router.currentRoute.path === '/login') {
@@ -103,12 +103,13 @@ export default new Vuex.Store({
       }
     },
     async fetchUserDocs({ commit, dispatch }, params){
+      var currentUser = await fb.auth.currentUser
       // fetch user docs
       await fb.docsCollection
         .where('username', '==', params.userName)
         .get()
         .then(((querySnapshot) => {
-          const data = querySnapshot.docs.map((doc) => ({
+          let data = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -119,6 +120,12 @@ export default new Vuex.Store({
         dispatch('constructUserLink', params.userName)
 
         commit('setDocSlugs', docSlugs)
+
+          if(currentUser == null){
+            data = data.filter(doc => doc.status == 'publish' )
+          } else if(currentUser && data[0].uid !== currentUser.uid){
+            data = data.filter(doc => doc.status == 'publish' )
+          }
 
         // set active doc in state
         commit('setUserDocs',data)
@@ -169,7 +176,6 @@ export default new Vuex.Store({
       commit('setEditDoc', !state.editDoc) 
     },
     constructUserLink({ state, commit }, username) {
-      console.log(username)
       if('username' in state.activeDoc) {
         username = state.activeDoc.username
       } else if ('username' in state.userProfile) {
