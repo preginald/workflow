@@ -1,21 +1,9 @@
 <template>
   <v-container>
     <Heading />
+    <v-divider class="my-3"></v-divider>
     <v-row v-if="Object.keys(activeDoc).length">
       <v-col sm="4" md="2">
-        <v-card class="mb-1" v-if="editDoc">
-          <v-card-actions>
-            <v-row>
-              <v-col>
-                <v-btn :disabled="disabled()" @click="updateDoc(activeDoc)">Update doc</v-btn>
-              </v-col>
-              <v-col>
-                <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-                <v-btn v-else @click="softDeleteDoc(activeDoc)"><v-icon>mdi-recycle</v-icon></v-btn>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
         <v-card v-if="editDoc" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
@@ -52,6 +40,13 @@
 
       <v-col sm="8" md="10">
 
+    <v-toolbar dense v-if="editDoc" class="mb-3">
+        <v-spacer></v-spacer>
+                <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                <v-btn v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
+                <v-btn :disabled="disabled()" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
+                <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled()" @click="publish(activeDoc)" class="mx-1">Publish</v-btn>
+    </v-toolbar>
         <v-row v-if="editDoc">
           <v-col md="6" >
             <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
@@ -127,6 +122,10 @@ export default {
     ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck']),
     init(){
       this.loadUserDoc(this.$route.params)
+    },
+    publish(){
+      this.doc.status = 'publish'
+      this.updateDoc(this.doc)
     },
     onCopy() {
       console.log('You just copied')
