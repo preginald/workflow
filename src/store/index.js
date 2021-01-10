@@ -102,7 +102,7 @@ export default new Vuex.Store({
         router.push({ name: 'UserHome', params: { userName: userProfile.data().username}})
       }
     },
-    async fetchUserDocs({ commit }, params){
+    async fetchUserDocs({ commit, dispatch }, params){
       // fetch user docs
       await fb.docsCollection
         .where('username', '==', params.userName)
@@ -116,7 +116,10 @@ export default new Vuex.Store({
             id: doc.id, slug: doc.slug
           }))
 
+        dispatch('constructUserLink', params.userName)
+
         commit('setDocSlugs', docSlugs)
+
         // set active doc in state
         commit('setUserDocs',data)
         }))
@@ -137,6 +140,7 @@ export default new Vuex.Store({
           commit('setActiveDoc',data[0])
         }))
       }
+      dispatch('constructUserLink', params.userName)
       dispatch('isOwner')
 
     },
@@ -165,6 +169,7 @@ export default new Vuex.Store({
       commit('setEditDoc', !state.editDoc) 
     },
     constructUserLink({ state, commit }, username) {
+      console.log(username)
       if('username' in state.activeDoc) {
         username = state.activeDoc.username
       } else if ('username' in state.userProfile) {
