@@ -40,12 +40,18 @@
 
       <v-col sm="8" md="10">
 
-    <v-toolbar dense v-if="editDoc" class="mb-3">
+    <v-toolbar dense v-if="isOwner" class="mb-3">
         <v-spacer></v-spacer>
+        <template v-if="editDoc">
                 <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                 <v-btn v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
                 <v-btn :disabled="disabled()" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
-                <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled()" @click="publish(activeDoc)" class="mx-1">Publish</v-btn>
+                <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled()" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+        <v-btn  @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
+        </template>
+        <template v-else>
+          <v-btn  @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'UserDoc'"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+        </template>
     </v-toolbar>
         <v-row v-if="editDoc">
           <v-col md="6" >
@@ -119,13 +125,13 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck']),
+    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleEditDoc']),
     init(){
       this.loadUserDoc(this.$route.params)
     },
     publish(){
-      this.doc.status = 'publish'
-      this.updateDoc(this.doc)
+      this.activeDoc.status = 'publish'
+      this.updateDoc(this.activeDoc)
     },
     onCopy() {
       console.log('You just copied')
@@ -260,11 +266,15 @@ export default {
 
 .pre {
   display: block;
-  white-space: pre;
+  white-space: normal;
   font-family: "Roberto Mono", Monaco, courier, monospace;
   padding: 1.2em 1.4em;
   font-size: 0.85rem;
   position: relative;
+}
+
+.pre .html {
+  white-space: pre;
 }
 
 .html::before {
@@ -286,6 +296,7 @@ export default {
 .bash::before {
   content: "Shell";
 }
+
 .pre ::before {
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
   position: absolute;

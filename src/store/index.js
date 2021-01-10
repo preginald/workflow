@@ -225,6 +225,7 @@ export default new Vuex.Store({
       commit('setActiveDoc', doc)
     },
     async updateDoc({ commit },doc){
+      console.log(doc.id)
       await fb.docsCollection.doc(doc.id)
         .update(doc)
         .then(() => {
