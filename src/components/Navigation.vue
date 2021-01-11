@@ -9,7 +9,7 @@
 
       <v-spacer></v-spacer>
       <template v-if="nav"> 
-        <v-btn icon to="/new"><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn icon @click="setCreateDoc(true)" to="/new"><v-icon>mdi-plus</v-icon></v-btn>
         <v-btn icon @click="logout()"><v-icon>mdi-logout-variant</v-icon></v-btn>
       </template>
       <template v-else> 
@@ -23,15 +23,16 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Navigation",
 
   computed: {
-     ...mapState(["nav","userProfile","isOwner","userLink", "editDoc"]),
+     ...mapState(["nav","userProfile","isOwner","userLink"]),
   },
   methods: {
+    ...mapMutations(["setCreateDoc"]),
     ...mapActions(["toggleEditDoc","logout"]),
     init(){
       console.log()

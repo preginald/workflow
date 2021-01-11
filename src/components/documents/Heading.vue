@@ -1,6 +1,6 @@
 <template>
-    <v-row v-if="Object.keys(activeDoc).length">
-      <v-col>
+    <v-row>
+      <v-col v-if="this.$route.name == 'ReadDoc'">
         <h2 class="text-h6">
           <router-link class="text-decoration-none" :to="userLink">{{
             activeDoc.username
@@ -11,6 +11,14 @@
             }}</router-link>
         </h2>
       </v-col>
+          <v-col v-else>
+            <h2 class="text-h6">
+              <router-link class="text-decoration-none" :to="userLink">{{
+                userProfile.username
+                }}</router-link>
+              <template v-if="activeDoc.title"> / {{ activeDoc.title }} </template >
+            </h2>
+          </v-col>
     </v-row>
 </template>
 
@@ -19,7 +27,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["activeDoc","userLink"]),
+    ...mapState(["activeDoc","userLink", "userProfile"]),
   },
   components: {},
   data: () => ({}),

@@ -232,7 +232,7 @@ export default {
     inputValue: '',
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
-    taskTypes: ['bash','html','js','mysql','yml'],
+    taskTypes: ['bash','html','js','mysql','php','yml'],
     doc: {
       title: '',
       slug: '',
@@ -250,19 +250,35 @@ export default {
 
 .pre {
   display: block;
-  white-space: pre;
+  white-space: normal;
   font-family: "Roberto Mono", Monaco, courier, monospace;
   padding: 1.2em 1.4em;
   font-size: 0.85rem;
   position: relative;
 }
 
-.html::before {
-  content: "HTML";
+.pre .html {
+  white-space: pre;
 }
 
-.yml::before {
-  content: "YML";
+.pre .js {
+  white-space: pre;
+}
+
+.pre .php {
+  white-space: pre;
+}
+
+.pre .js {
+  white-space: pre;
+}
+
+.bash::before {
+  content: "Shell";
+}
+
+.html::before {
+  content: "HTML";
 }
 
 .js::before {
@@ -273,9 +289,14 @@ export default {
   content: "MySQL";
 }
 
-.bash::before {
-  content: "Shell";
+.php::before {
+  content: "PHP";
 }
+
+.yml::before {
+  content: "YML";
+}
+
 .pre ::before {
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
   position: absolute;
@@ -283,7 +304,7 @@ export default {
   right: 0;
   color: #ccc;
   text-align: right;
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding: 5px 10px 0;
   line-height: 15px;
   height: 15px;

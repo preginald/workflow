@@ -13,9 +13,9 @@ const routes = [
   },
   {
     path: '/new',
-    name: 'NewDoc',
+    name: 'CreateDoc',
     component: () =>
-      import(/* webpackChunkName: "new" */ '../views/NewDoc.vue'),
+      import(/* webpackChunkName: "new" */ '../views/Doc.vue'),
     meta: {
       requiresAuth: true
     } 
@@ -40,9 +40,9 @@ const routes = [
   },
   {
     path: '/:userName/:docSlug',
-    name: 'UserDoc',
+    name: 'ReadDoc',
     component: () =>
-      import(/* webpackChunkName: "test" */ '../views/ReadDoc.vue'),
+      import(/* webpackChunkName: "test" */ '../views/Doc.vue'),
   },
 ];
 

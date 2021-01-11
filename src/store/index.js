@@ -14,7 +14,6 @@ export default new Vuex.Store({
     activeDoc: {},
     nav: false,
     isOwner: false,
-    editDoc: false,
     userLink: '',
     docValidation: {slug: false},
   },
@@ -47,7 +46,10 @@ export default new Vuex.Store({
       state.userLink = val
     },
     setEditDoc( state, status) {
-      state.editDoc = status
+      state.activeDoc.edit = status
+    },
+    setCreateDoc( state, status ) {
+      state.activeDoc.create = status
     },
     setValidDocSlug( state, status) {
       state.docValidation.slug = status
@@ -155,7 +157,7 @@ export default new Vuex.Store({
       commit('setValidDocSlug', false)
       if('uid' in doc){
         commit('setActiveDoc', doc)
-        router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
+        router.push({ name: 'ReadDoc', params: { userName: doc.username, docSlug: doc.slug } })
       } else {
         dispatch('fetchActiveDoc', doc)
       }
@@ -172,8 +174,26 @@ export default new Vuex.Store({
       }
 
     },
-    toggleEditDoc({ state, commit }) {
-      commit('setEditDoc', !state.editDoc) 
+    toggleCreateDoc( {state, commit} ){
+      commit('setCreateDoc', !state.activeDoc.create)
+      if(!state.activeDoc.create){
+        router.push({ name: 'UserHome', params: { userName: state.userProfile.username}})
+      }
+    },
+    async toggleEditDoc({ state, commit }) {
+      let doc = state.activeDoc
+      doc.edit = !doc.edit
+      await fb.docsCollection.doc(doc.id)
+        .update({
+          edit: doc.edit 
+        })
+        .then(() => {
+          console.log("Document successfully updated!")
+        })
+        .catch(error => {
+          console.log("Error updating document: ", error)
+        })
+      commit('setActiveDoc', doc)
     },
     constructUserLink({ state, commit }, username) {
       if('username' in state.activeDoc) {
@@ -193,7 +213,7 @@ export default new Vuex.Store({
           console.log('Saved doc: ', docRef.id)
           commit('setActiveDoc', doc)
           commit('setEditDoc', editStatus) 
-          router.push({ name: 'UserDoc', params: { userName: doc.username, docSlug: doc.slug } })
+          router.push({ name: 'ReadDoc', params: { userName: doc.username, docSlug: doc.slug } })
         })
         .catch(error => {
           console.log("Error adding document: ", error)

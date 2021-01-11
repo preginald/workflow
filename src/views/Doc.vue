@@ -4,7 +4,7 @@
     <v-divider class="my-3"></v-divider>
     <v-row v-if="Object.keys(activeDoc).length">
       <v-col sm="4" md="2">
-        <v-card v-if="editDoc" class="mb-1">
+        <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
             <v-row>
@@ -40,20 +40,26 @@
 
       <v-col sm="8" md="10">
 
-    <v-toolbar dense v-if="isOwner" class="mb-3">
-        <v-spacer></v-spacer>
-        <template v-if="editDoc">
-                <v-btn v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-                <v-btn v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
-                <v-btn :disabled="disabled()" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
-                <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled()" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-        <v-btn  @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
-        </template>
-        <template v-else>
-          <v-btn  @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'UserDoc'"><v-icon>mdi-pencil-outline</v-icon></v-btn>
-        </template>
+    <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
+
+      <v-spacer></v-spacer>
+      <template v-if="activeDoc.edit">
+        <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+        <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
+        <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
+        <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+        <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
+      </template>
+      <template v-if="activeDoc.create">
+        <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
+        <v-btn :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+        <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+      <template v-if="!activeDoc.edit">
+        <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+      </template>
     </v-toolbar>
-        <v-row v-if="editDoc">
+    <v-row v-if="activeDoc.edit || activeDoc.create">
           <v-col md="6" >
             <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
             <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
@@ -62,15 +68,15 @@
         </v-row>
 
         <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
-          <v-card-title v-if="!editDoc" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
-          <v-app-bar flat v-if="editDoc">
+          <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
+          <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
             <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
           </v-app-bar>
           <v-card-text>
             <v-row>
-              <v-col sm="12" :md="md()" lg="6" v-if="editDoc">
+              <v-col sm="12" :md="md()" lg="6" v-if="activeDoc.edit || activeDoc.create">
                 <v-text-field label="Title" v-model="step.title"></v-text-field>
                 <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
               </v-col>
@@ -78,7 +84,7 @@
             <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
               <v-card-text>
                 <v-row>
-                  <v-col md="6" v-if="editDoc">
+                  <v-col md="6" v-if="activeDoc.edit || activeDoc.create">
                     <v-toolbar>
                       <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
                     </v-toolbar>
@@ -89,7 +95,7 @@
                   </v-col>
                 </v-row>
               </v-card-text>
-              <v-card-actions v-if="editDoc"> 
+              <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
                 <v-row>
                   <v-col md="2">
                     <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
@@ -97,7 +103,7 @@
                 </v-row>
               </v-card-actions>
             </v-card>
-            <v-card-actions v-if="editDoc">
+            <v-card-actions v-if="activeDoc.edit || activeDoc.create">
               <v-btn v-if="i == (activeDoc.steps.length - 1)" @click="addStep()">Add step</v-btn>
             </v-card-actions>
           </v-card-text>
@@ -110,12 +116,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import Heading from "../components/documents/Heading";
 
 export default {
   computed: {
-    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "editDoc","docValidation"]),
+    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation"]),
   },
   name: "Home",
   components: { 
@@ -125,13 +131,37 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['loadUserDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleEditDoc']),
+    ...mapMutations(['setActiveDoc']),
+    ...mapActions(['loadUserDoc','createDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
     init(){
-      this.loadUserDoc(this.$route.params)
+      console.log(this.$route.name)
+      if(this.$route.name === "ReadDoc"){
+        this.loadUserDoc(this.$route.params)
+      }
+
+      if(this.$route.name === "CreateDoc"){
+      let newDoc = {
+        title: '',
+        slug: '',
+        description: '',
+        variableTag: 'vv',
+        steps: [{title: 'First step', tasks: [{title: '', type: ''}]}],
+        inputs: [],
+        create: true,
+      }
+        this.setActiveDoc(newDoc)
+      }
     },
     publish(){
       this.activeDoc.status = 'publish'
+      this.activeDoc.create= false
       this.updateDoc(this.activeDoc)
+    },
+    saveDraft(){
+      this.activeDoc.status = 'draft'
+      this.activeDoc.edit = true
+      this.activeDoc.create= false
+      this.createDoc(this.activeDoc)
     },
     onCopy() {
       console.log('You just copied')
@@ -139,17 +169,35 @@ export default {
     onError() {
       console.log('Error copy')
     },
-    disabled(){
-      if(this.docValidation.slug){
-        this.slugHint = "Slug already exists"
-        return  'disabled'
+    validateSubmit(){
+      let error = true 
+      if(this.activeDoc.title.length < 50 || this.activeDoc.title.length > 15){
+        error = true
       } else {
-        this.slugHint = null
-        return  false
+        error = false
       }
+
+      if(this.activeDoc.slug.length < 50 || this.activeDoc.slug.length > 15){
+        error = true
+      } else {
+        error = false
+      } 
+
+      if(this.docValidation.slug){
+        this.disabled = 'disabled'
+        this.slugHint = "Slug already exists"
+      } else {
+        this.disabled = false
+        this.slugHint = null
+      }
+
+      if(error){
+        this.disabled = 'disabled'
+        // this.slugHint = null
+      } 
     },
     md(){
-      if(this.editDoc) {
+      if(this.activeDoc.edit || this.activeDoc.create) {
         return 6
       } else {
         return 12
@@ -161,6 +209,7 @@ export default {
     titleToSlug(){
       this.activeDoc.slug = this.activeDoc.title.replace(/\s+/g, '-').toLowerCase();
       this.slugCheck(this.activeDoc.slug)
+      this.validateSubmit()
     },
     inputLabelToName(){
       this.inputName = this.inputLabel.replace(/\s+/g, '-').toLowerCase();
@@ -242,6 +291,7 @@ export default {
     rules: {
       title:[
         (value) => !!value || "Required",
+        (value) => value.length > 15 || "Min 15 characters",
         (value) => value.length < 50 || "Max 50 characters",
       ],
       slug:[
@@ -249,14 +299,7 @@ export default {
         (value) => value.length < 50 || "Max 50 characters",
       ],
     },
-    doc: {
-      title: '',
-      slug: '',
-      description: '',
-      variableTag: 'vv',
-      steps: [{title: 'First step', tasks: [{title: '', type: ''}]}],
-      inputs: [],
-    }
+    disabled: 'disabled'
     // step: 1,
   }),
 };
