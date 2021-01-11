@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <Heading />
+    <v-divider class="my-3"></v-divider>
   <v-card v-if="userDocs">
     <v-list dense>
       <v-subheader>{{ userDocs.length }} docs</v-subheader>

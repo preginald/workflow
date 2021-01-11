@@ -3,7 +3,91 @@
     <Heading />
     <v-divider class="my-3"></v-divider>
     <v-row v-if="Object.keys(activeDoc).length">
-      <v-col sm="4" md="2">
+
+      <v-col sm="12" md="9">
+        <v-row v-if="activeDoc.create">
+          <h1 class="text-h5">Create a new document</h1>
+          <p> A document consists of steps and tasks </p>
+        </v-row>
+        <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
+
+          <v-spacer></v-spacer>
+          <template v-if="activeDoc.edit">
+        <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+        <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
+        <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
+        <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+        <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
+      </template>
+      <template v-if="activeDoc.create">
+        <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
+        <v-btn :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+        <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+      <template v-if="!activeDoc.edit">
+        <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+      </template>
+    </v-toolbar>
+    <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
+      <v-card-text>
+        <v-row>
+          <v-col md="12" >
+            <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
+            <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
+            <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+
+        <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
+          <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
+          <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
+            <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
+          </v-app-bar>
+          <v-card-text>
+            <v-row>
+              <v-col sm="12" :md="md()" lg="6" v-if="activeDoc.edit || activeDoc.create">
+                <v-text-field label="Title" v-model="step.title"></v-text-field>
+                <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
+              </v-col>
+            </v-row>
+            <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
+              <v-card-text>
+                <v-row>
+                  <v-col md="6" v-if="activeDoc.edit || activeDoc.create">
+                    <v-toolbar>
+                      <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
+                    </v-toolbar>
+                    <v-textarea v-model="task.intro" hint="Introduction" rows="2"></v-textarea>
+                    <v-textarea v-model="task.input" hint="Input" :rows="rows(task.input)"></v-textarea>
+                    <v-textarea v-model="task.output" hint="Output" rows="2"></v-textarea>
+                  </v-col>
+                  <v-col sm=12 :md="md()" lg="12">
+                    <div>{{ task.intro }}</div>
+                    <v-sheet v-clipboard:copy="taskInterpreter(task.title)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input) }}</span></v-sheet>
+                    <v-sheet v-if="task.output" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output }}</span></v-sheet>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
+                <v-row>
+                  <v-col md="2">
+                    <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card>
+            <v-card-actions v-if="activeDoc.edit || activeDoc.create">
+              <v-btn v-if="i == (activeDoc.steps.length - 1)" @click="addStep()">Add step</v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+
+      </v-col>
+      <v-col sm="12" md="3">
         <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
@@ -36,79 +120,6 @@
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
-
-      <v-col sm="8" md="10">
-
-    <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
-
-      <v-spacer></v-spacer>
-      <template v-if="activeDoc.edit">
-        <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-        <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
-        <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
-        <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-        <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
-      </template>
-      <template v-if="activeDoc.create">
-        <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
-        <v-btn :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-        <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-      <template v-if="!activeDoc.edit">
-        <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
-      </template>
-    </v-toolbar>
-    <v-row v-if="activeDoc.edit || activeDoc.create">
-          <v-col md="6" >
-            <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
-            <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
-            <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
-          </v-col>
-        </v-row>
-
-        <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
-          <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
-          <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
-            <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
-          </v-app-bar>
-          <v-card-text>
-            <v-row>
-              <v-col sm="12" :md="md()" lg="6" v-if="activeDoc.edit || activeDoc.create">
-                <v-text-field label="Title" v-model="step.title"></v-text-field>
-                <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
-              </v-col>
-            </v-row>
-            <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
-              <v-card-text>
-                <v-row>
-                  <v-col md="6" v-if="activeDoc.edit || activeDoc.create">
-                    <v-toolbar>
-                      <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
-                    </v-toolbar>
-                    <v-textarea v-model="task.title" :hint="taskTitleInputHint" :rows="rows(task.title)"></v-textarea>
-                  </v-col>
-                  <v-col sm=12 :md="md()" lg="12">
-                    <v-sheet v-clipboard:copy="taskInterpreter(task.title)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.title) }}</span></v-sheet>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
-                <v-row>
-                  <v-col md="2">
-                    <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-            <v-card-actions v-if="activeDoc.edit || activeDoc.create">
-              <v-btn v-if="i == (activeDoc.steps.length - 1)" @click="addStep()">Add step</v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-
       </v-col>
     </v-row>
 
@@ -171,29 +182,32 @@ export default {
     },
     validateSubmit(){
       let error = true 
-      if(this.activeDoc.title.length < 50 || this.activeDoc.title.length > 15){
-        error = true
-      } else {
+      if(this.activeDoc.title.length < 50 && this.activeDoc.title.length > 15){
         error = false
+      } else {
+        error = true
+        console.log('Title is not valid')
       }
 
-      if(this.activeDoc.slug.length < 50 || this.activeDoc.slug.length > 15){
-        error = true
-      } else {
+      if(this.activeDoc.slug.length < 50 && this.activeDoc.slug.length > 15){
         error = false
+      } else {
+        error = true
       } 
 
       if(this.docValidation.slug){
-        this.disabled = 'disabled'
+        error = true
         this.slugHint = "Slug already exists"
       } else {
-        this.disabled = false
+        error = false
         this.slugHint = null
       }
 
       if(error){
         this.disabled = 'disabled'
         // this.slugHint = null
+      } else {
+        this.disabled = false
       } 
     },
     md(){

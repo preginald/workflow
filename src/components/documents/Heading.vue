@@ -6,7 +6,7 @@
             activeDoc.username
             }}</router-link>
           <span v-if="activeDoc.title"> / </span >
-          <router-link class="text-decoration-none" :to="activeDoc.slug">{{
+          <router-link v-if="Object.keys(activeDoc).length" class="text-decoration-none" :to="activeDoc.slug">{{
             activeDoc.title
             }}</router-link>
         </h2>
