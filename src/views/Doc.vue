@@ -60,16 +60,25 @@
                 <v-row>
                   <v-col v-if="activeDoc.edit || activeDoc.create">
                     <v-toolbar v-if="hover">
-                      <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
+                          <v-btn-toggle :value="task.type">
+                            <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
+                          </v-btn-toggle>
+                          <v-btn icon @click="toggleTaskIntroForm(task.intro)">
+                            <v-icon>mdi-crosshairs-gps</v-icon>
+                          </v-btn>
+                          <v-btn icon @click="toggleTaskOutputForm(task.output)">
+                            <v-icon>mdi-crosshairs-gps</v-icon>
+                          </v-btn>
+                          <v-spacer></v-spacer>
                     </v-toolbar>
-                    <v-textarea v-model="task.intro" hint="Introduction" rows="2"></v-textarea>
-                    <v-textarea v-model="task.input" hint="Input" :rows="rows(task.input)"></v-textarea>
-                    <v-textarea v-model="task.output" hint="Output" rows="2"></v-textarea>
+                    <v-textarea v-if="task.intro.form" v-model="task.intro.content" hint="Introduction" rows="2"></v-textarea>
+                    <v-textarea v-model="task.input.content" hint="Input" :rows="rows(task.input.content)"></v-textarea>
+                    <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
                   </v-col>
                   <v-col sm=12 :md="md()" lg="12">
-                    <div>{{ task.intro }}</div>
-                    <v-sheet v-clipboard:copy="taskInterpreter(task.input)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input) }}</span></v-sheet>
-                    <v-sheet v-if="task.output" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output }}</span></v-sheet>
+                    <div>{{ task.intro.content }}</div>
+                    <v-sheet v-clipboard:copy="taskInterpreter(task.input.content)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input.content) }}</span></v-sheet>
+                    <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output.content }}</span></v-sheet>
                   </v-col>
                 </v-row>
                 </v-hover>
@@ -165,6 +174,12 @@ export default {
         this.setActiveDoc(newDoc)
       }
     },
+    toggleTaskIntroForm(intro){
+      intro.form = !intro.form
+    },
+    toggleTaskOutputForm(output){
+      output.form = !output.form
+    },
     publish(){
       this.activeDoc.status = 'publish'
       this.activeDoc.create= false
@@ -247,7 +262,10 @@ export default {
       this.activeDoc.steps.splice(i,1)
     },
     addTask(i){
-      this.activeDoc.steps[i].tasks.push({intro: '', input: '', output: ''})
+      this.activeDoc.steps[i].tasks.push({intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }})
+    },
+    setTaskType(task,type){
+      task.type = type
     },
     taskInterpreter(task) {
       if(task){
@@ -307,8 +325,10 @@ export default {
     inputValue: '',
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
-    taskTypes: ['bash','html','js','mysql','php','yml'],
+    selectedTaskType: [],
+    taskTypes: ['none','bash','html','js','mysql','php','yml'],
     slugHint: '',
+    taskForm: [{intro: false, input: false, output: false}],
     rules: {
       title:[
         (value) => !!value || "Required",
