@@ -4,7 +4,7 @@
     <v-divider class="my-3"></v-divider>
     <v-row v-if="Object.keys(activeDoc).length">
 
-      <v-col sm="12" md="9">
+      <v-col sm="12" md="9" lg="7">
         <v-row v-if="activeDoc.create">
           <h1 class="text-h5">Create a new document</h1>
           <p> A document consists of steps and tasks </p>
@@ -56,9 +56,10 @@
             </v-row>
             <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
               <v-card-text>
+                <v-hover v-slot="{ hover }">
                 <v-row>
                   <v-col md="6" v-if="activeDoc.edit || activeDoc.create">
-                    <v-toolbar>
+                    <v-toolbar v-if="hover">
                       <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
                     </v-toolbar>
                     <v-textarea v-model="task.intro" hint="Introduction" rows="2"></v-textarea>
@@ -67,10 +68,11 @@
                   </v-col>
                   <v-col sm=12 :md="md()" lg="12">
                     <div>{{ task.intro }}</div>
-                    <v-sheet v-clipboard:copy="taskInterpreter(task.title)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input) }}</span></v-sheet>
+                    <v-sheet v-clipboard:copy="taskInterpreter(task.input)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input) }}</span></v-sheet>
                     <v-sheet v-if="task.output" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output }}</span></v-sheet>
                   </v-col>
                 </v-row>
+                </v-hover>
               </v-card-text>
               <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
                 <v-row>
@@ -87,7 +89,7 @@
         </v-card>
 
       </v-col>
-      <v-col sm="12" md="3">
+      <v-col sm="12" md="3" lg="2">
         <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
@@ -245,9 +247,10 @@ export default {
       this.activeDoc.steps.splice(i,1)
     },
     addTask(i){
-      this.activeDoc.steps[i].tasks.push({title: ''})
+      this.activeDoc.steps[i].tasks.push({intro: '', input: '', output: ''})
     },
     taskInterpreter(task) {
+      if(task){
       const openTag = "<" + this.activeDoc.variableTag + ">"
       const closeTag = "</" + this.activeDoc.variableTag + ">"
 
@@ -272,6 +275,10 @@ export default {
         return newTask;
 
         }
+      }
+
+      } else {
+        return task
       }
     },
     getVariable(task) {
