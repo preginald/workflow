@@ -58,7 +58,7 @@
               <v-card-text>
                 <v-hover v-slot="{ hover }">
                 <v-row>
-                  <v-col md="6" v-if="activeDoc.edit || activeDoc.create">
+                  <v-col v-if="activeDoc.edit || activeDoc.create">
                     <v-toolbar v-if="hover">
                       <v-select hide-details label="type" v-model="task.type" :items="taskTypes"></v-select>
                     </v-toolbar>
