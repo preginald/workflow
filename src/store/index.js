@@ -158,6 +158,14 @@ export default new Vuex.Store({
       doc.steps.forEach(step => {
         step.tasks.forEach(task => {
           task.typeKey = state.taskTypes.indexOf(task.type)
+          let form = []
+          if('intro' in task){
+            task.intro.form ? form.push(0) : null 
+          }
+          if('output' in task){
+            task.output.form ? form.push(1) : null 
+          }
+          task.form = form
         })
       })
       commit('setActiveDoc', doc)
