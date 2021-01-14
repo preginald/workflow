@@ -57,31 +57,29 @@
             <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
               <v-card-text>
                 <v-hover v-slot="{ hover }">
-                <v-row>
-                  <v-col v-if="activeDoc.edit || activeDoc.create">
-                    <v-toolbar v-if="hover">
-                          <v-btn-toggle v-model="task.typeKey">
-                            <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
-                          </v-btn-toggle>
-                          <v-btn icon @click="toggleTaskIntroForm(task.intro)">
-                            <v-icon>mdi-crosshairs-gps</v-icon>
-                          </v-btn>
-                          <v-btn icon @click="toggleTaskOutputForm(task.output)">
-                            <v-icon>mdi-crosshairs-gps</v-icon>
-                          </v-btn>
-                          <v-spacer></v-spacer>
-                    </v-toolbar>
-                    <v-textarea v-if="task.intro.form" v-model="task.intro.content" hint="Introduction" rows="2"></v-textarea>
-                    <v-textarea v-model="task.input.content" hint="Input" :rows="rows(task.input.content)"></v-textarea>
-                    <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
-                  </v-col>
-                  <v-col sm=12 :md="md()" lg="12">
-                    <div>{{ task.intro.content }}</div>
-                    <v-sheet v-clipboard:copy="taskInterpreter(task.input.content)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input.content) }}</span></v-sheet>
-                    <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output.content }}</span></v-sheet>
-                  </v-col>
+                 <v-row>
+                   <v-col v-if="activeDoc.edit || activeDoc.create">
+                     <v-toolbar v-if="hover" dense>
+                       <v-btn-toggle v-model="task.typeKey" dense>
+                       <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
+                     </v-btn-toggle>
+                     <v-divider></v-divider>
+                     <v-btn-toggle v-model="task.form" multiple dense>
+                       <v-btn @click="toggleTaskIntroForm(task.intro)">Int</v-btn>
+                       <v-btn @click="toggleTaskOutputForm(task.output)">Out</v-btn>
+                     </v-btn-toggle>
+                   </v-toolbar>
+                   <v-textarea v-if="task.intro.form" v-model="task.intro.content" hint="Introduction" rows="2"></v-textarea>
+                   <v-textarea v-model="task.input.content" hint="Input" :rows="rows(task.input.content)"></v-textarea>
+                   <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
+                 </v-col>
+                 <v-col sm=12 :md="md()" lg="12">
+                   <div>{{ task.intro.content }}</div>
+                   <v-sheet v-clipboard:copy="taskInterpreter(task.input.content)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input.content) }}</span></v-sheet>
+                   <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output.content }}</span></v-sheet>
+                 </v-col>
                 </v-row>
-                </v-hover>
+              </v-hover>
               </v-card-text>
               <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
                 <v-row>
@@ -224,7 +222,7 @@ export default {
         this.disabled = 'disabled'
         // this.slugHint = null
       } else {
-        this.disabled = false
+        this.disabled = null
       } 
     },
     md(){
@@ -339,7 +337,7 @@ export default {
         (value) => value.length < 50 || "Max 50 characters",
       ],
     },
-    disabled: 'disabled'
+    disabled: null,
     // step: 1,
   }),
 };
