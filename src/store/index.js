@@ -10,7 +10,7 @@ export default new Vuex.Store({
     user: null,
     userProfile: {},
     userDocs: null,
-    docSluts: null,
+    taskTypes: ['none','bash','html','js','mysql','php','yml'],
     activeDoc: {},
     nav: false,
     isOwner: false,
@@ -133,7 +133,7 @@ export default new Vuex.Store({
         commit('setUserDocs',data)
         }))
     },
-    async fetchActiveDoc({ state, commit, dispatch }, params){
+    async fetchActiveDoc({ state, dispatch }, params){
       if(typeof state.activeDoc.length == 'undefined'){
       // fetch active doc
       await fb.docsCollection
@@ -145,13 +145,22 @@ export default new Vuex.Store({
             id: doc.id,
             ...doc.data(),
           }))
+          dispatch('processor',data[0])
           // set active doc in state
-          commit('setActiveDoc',data[0])
+          // commit('setActiveDoc',data[0])
         }))
       }
       dispatch('constructUserLink', params.userName)
       dispatch('isOwner')
 
+    },
+    processor({commit,state},doc){
+      doc.steps.forEach(step => {
+        step.tasks.forEach(task => {
+          task.typeKey = state.taskTypes.indexOf(task.type)
+        })
+      })
+      commit('setActiveDoc', doc)
     },
     loadUserDoc({ commit, dispatch }, doc) {
       commit('setValidDocSlug', false)

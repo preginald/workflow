@@ -60,7 +60,7 @@
                 <v-row>
                   <v-col v-if="activeDoc.edit || activeDoc.create">
                     <v-toolbar v-if="hover">
-                          <v-btn-toggle :value="task.type">
+                          <v-btn-toggle v-model="task.typeKey">
                             <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
                           </v-btn-toggle>
                           <v-btn icon @click="toggleTaskIntroForm(task.intro)">
