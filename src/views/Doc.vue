@@ -143,7 +143,7 @@ import Heading from "../components/documents/Heading";
 
 export default {
   computed: {
-    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation"]),
+    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation","taskTypes"]),
   },
   name: "Home",
   components: { 
@@ -326,7 +326,6 @@ export default {
     taskTitleInputHint: '',
     taskContainerClass: 'pre',
     selectedTaskType: [],
-    taskTypes: ['none','bash','html','js','mysql','php','yml'],
     slugHint: '',
     taskForm: [{intro: false, input: false, output: false}],
     rules: {
