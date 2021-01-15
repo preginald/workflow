@@ -260,11 +260,10 @@ export default {
       this.activeDoc.steps.splice(i,1)
     },
     addTask(i){
-      this.activeDoc.steps[i].tasks.push({intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }})
+      this.activeDoc.steps[i].tasks.push(this.newTask)
     },
     insertTask(tasks,taskKey){
-      const newTask = {intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }}
-      tasks.splice(taskKey+1, 0, newTask)
+      tasks.splice(taskKey+1, 0, this.newTask)
     },
     setTaskType(task,type){
       task.type = type
@@ -329,6 +328,7 @@ export default {
     selectedTaskType: [],
     slugHint: '',
     taskForm: [{intro: false, input: false, output: false}],
+    newTask: {intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }},
     rules: {
       title:[
         (value) => !!value || "Required",
