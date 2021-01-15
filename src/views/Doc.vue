@@ -131,7 +131,23 @@
         </v-card>
       </v-col>
     </v-row>
+ <v-snackbar
+      v-model="snackbar.status"
+      :timeout="snackbar.timeout"
+    >
+      {{ snackbar.text }}
 
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackbar.status = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -189,8 +205,10 @@ export default {
       this.activeDoc.create= false
       this.createDoc(this.activeDoc)
     },
-    onCopy() {
-      console.log('You just copied')
+    onCopy(){ 
+      this.snackbar.text = "You just copied"
+      this.snackbar.status = true
+      // console.log('You just copied')
     },
     onError() {
       console.log('Error copy')
@@ -341,6 +359,7 @@ export default {
       ],
     },
     disabled: null,
+    snackbar: {status: false, text: '', timeout: 2000}
     // step: 1,
   }),
 };
