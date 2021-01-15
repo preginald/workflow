@@ -16,6 +16,7 @@ export default new Vuex.Store({
     isOwner: false,
     userLink: '',
     docValidation: {slug: false},
+    taskInputHint: '',
   },
   mutations: {
     setUser(state, user){
@@ -47,6 +48,9 @@ export default new Vuex.Store({
     },
     setEditDoc( state, status) {
       state.activeDoc.edit = status
+    },
+    setTaskInputHint( state, hints ){
+      state.taskInputHint = hints
     },
     setCreateDoc( state, status ) {
       state.activeDoc.create = status
@@ -154,7 +158,7 @@ export default new Vuex.Store({
       dispatch('isOwner')
 
     },
-    processor({commit,state},doc){
+    processor({commit,state, dispatch},doc){
       doc.steps.forEach(step => {
         step.tasks.forEach(task => {
           task.typeKey = state.taskTypes.indexOf(task.type)
@@ -168,7 +172,11 @@ export default new Vuex.Store({
           task.form = form
         })
       })
+      dispatch('hintsFromTaskInputs', doc)
       commit('setActiveDoc', doc)
+    },
+    hintsFromTaskInputs({commit},doc){
+      commit('setTaskInputHint',doc.inputs.map(input => {return input.name}).join(' '))
     },
     loadUserDoc({ commit, dispatch }, doc) {
       commit('setValidDocSlug', false)

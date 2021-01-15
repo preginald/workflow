@@ -39,7 +39,6 @@
         </v-row>
       </v-card-text>
     </v-card>
-
         <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
           <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
           <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
@@ -70,13 +69,13 @@
                      </v-btn-toggle>
                    </v-toolbar>
                    <v-textarea v-if="task.intro.form" v-model="task.intro.content" hint="Introduction" rows="2"></v-textarea>
-                   <v-textarea v-model="task.input.content" hint="Input" :rows="rows(task.input.content)"></v-textarea>
+                   <v-textarea v-model="task.input.content" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
                    <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
                  </v-col>
                  <v-col sm=12 :md="md()" lg="12">
                    <div>{{ task.intro.content }}</div>
                    <v-sheet v-clipboard:copy="taskInterpreter(task.input.content)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input.content) }}</span></v-sheet>
-                   <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ task.output.content }}</span></v-sheet>
+                   <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.output.content) }}</span></v-sheet>
                  </v-col>
                 </v-row>
               </v-hover>
@@ -85,6 +84,7 @@
                 <v-row>
                   <v-col md="2">
                     <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
+                    <v-btn v-else @click="insertTask(step.tasks,taskKey)">Insert task</v-btn>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -141,7 +141,7 @@ import Heading from "../components/documents/Heading";
 
 export default {
   computed: {
-    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation","taskTypes"]),
+    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation","taskTypes","taskInputHint"]),
   },
   name: "Home",
   components: { 
@@ -165,7 +165,7 @@ export default {
         slug: '',
         description: '',
         variableTag: 'vv',
-        steps: [{title: 'First step', tasks: [{title: '', type: ''}]}],
+        steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
         inputs: [],
         create: true,
       }
@@ -248,19 +248,23 @@ export default {
     },
     addInput(){
       this.activeDoc.inputs.push({label: this.inputLabel, name: this.inputName, value: this.inputValue})
-      this.taskTitleInputHint = this.activeDoc.inputs.map(input => {return input.name}).join(' ')
+      // this.getTaskTitleInputHints()
       this.inputLabel = ''
       this.inputName = ''
       this.inputValue = ''
     },
     addStep(){
-      this.activeDoc.steps.push({title: '', tasks: [{title: ''}]})
+      this.activeDoc.steps.push({title: '', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]})
     },
     deleteStep(i){
       this.activeDoc.steps.splice(i,1)
     },
     addTask(i){
       this.activeDoc.steps[i].tasks.push({intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }})
+    },
+    insertTask(tasks,taskKey){
+      const newTask = {intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }}
+      tasks.splice(taskKey+1, 0, newTask)
     },
     setTaskType(task,type){
       task.type = type
@@ -321,7 +325,6 @@ export default {
     inputLabel: '',
     inputName: '',
     inputValue: '',
-    taskTitleInputHint: '',
     taskContainerClass: 'pre',
     selectedTaskType: [],
     slugHint: '',
@@ -347,27 +350,12 @@ export default {
 
 .pre {
   display: block;
-  white-space: normal;
+  white-space: pre;
   font-family: "Roberto Mono", Monaco, courier, monospace;
   padding: 1.2em 1.4em;
   font-size: 0.85rem;
   position: relative;
-}
-
-.pre .html {
-  white-space: pre;
-}
-
-.pre .js {
-  white-space: pre;
-}
-
-.pre .php {
-  white-space: pre;
-}
-
-.pre .js {
-  white-space: pre;
+  overflow-y: hidden;
 }
 
 .bash::before {
