@@ -74,7 +74,7 @@
                     </v-col>
                  </v-row>
                </v-hover>
-                    <Tasks :task="task"></Tasks>
+              <Tasks :task="task"></Tasks>
             </v-card-text>
             <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
               <v-row>
