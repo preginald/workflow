@@ -41,7 +41,7 @@
           <v-card-title>Here's an example</v-card-title>
           <v-card-text>
             <p>Fill in the input fields below and you'll notice the content of <v-chip label x-small color="primary" class="text-uppercase">Input</v-chip> change.</p>
-            <p>You can click on the input text to copy the text to memory.</p>
+            <p>You can also click on the input text to copy the text to memory.</p>
             <v-row>
               <v-col v-for="input in activeDoc.inputs" :key="input.name" sm="3">
                 <v-text-field
@@ -140,10 +140,10 @@ export default {
       ],
       tasks: [
         {
-          intro: {content: "Type the following to SSH into the host."},
+          intro: {content: "Type the following to SSH into the host and you should see the output below."},
           input: {content: "ssh -p <vv>port</vv> <vv>username</vv>@<vv>address</vv>"},
-          output: {content: "Enter password"},
-          type: "Bash",
+          output: {content: "<vv>username</vv>@<vv>address</vv>'s password:"},
+          type: "bash",
         },
       ]
     },
@@ -162,3 +162,27 @@ export default {
   } 
 };
 </script>
+
+<style scoped>
+
+.pre {
+  display: block;
+  white-space: pre;
+  font-family: "Roberto Mono", Monaco, courier, monospace;
+  padding: 1.2em 1.4em;
+  font-size: 0.85rem;
+  position: relative;
+  overflow-y: hidden;
+}
+
+.bash::before {
+  content: "$";
+}
+
+.pre ::before {
+  position: relative;
+  left: 0;
+  padding: 10px;
+}
+
+</style>
