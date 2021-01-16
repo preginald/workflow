@@ -143,7 +143,7 @@
       v-model="snackbar.status"
       :timeout="snackbar.timeout"
     >
-    <span class="text-truncate">{{ snackbar.text }}</span>
+    <span>{{ snackbar.text }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
