@@ -79,8 +79,8 @@
         <v-card>
           <v-card-title>Here are more examples</v-card-title>
           <v-card-text>
-            <p><router-link to="/preginald/how-to-start-and-end-an-ssh-session">How to start and end an ssh session</router-link></p>
-            <p><router-link to="/preginald/install-wordpress-on-apache2-virtualhost">Install Wordpress on Apache2 VirtualHost</router-link></p>
+            <p><router-link :to="{ name: 'ReadDoc', params: { userName: 'preginald', docSlug: 'how-to-start-and-end-an-ssh-session' }}">How to start and end an ssh session</router-link></p>
+            <p><router-link :to="{ name: 'ReadDoc', params: { userName: 'preginald', docSlug: 'install-wordpress-on-apache2-virtualhost' }}">Install Wordpress on Apache2 VirtualHost</router-link></p>
           </v-card-text>
         </v-card>
       </v-col>
