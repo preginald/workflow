@@ -8,7 +8,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title>Why doReplace</v-card-title>
+          <v-card-title>Why docReplace</v-card-title>
           <v-card-text>
             <p>I created docReplace because I wanted a strutured and dynamic way to document my devops processes.</p>
             <p>Dynamic because I can fill in some variable fields and the document will be updated accordingly.</p>
