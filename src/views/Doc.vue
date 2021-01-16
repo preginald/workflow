@@ -48,12 +48,12 @@
           </v-app-bar>
           <v-card-text>
             <v-row>
-              <v-col sm="12" :md="md()" lg="6" v-if="activeDoc.edit || activeDoc.create">
+              <v-col sm="12" v-if="activeDoc.edit || activeDoc.create">
                 <v-text-field label="Title" v-model="step.title"></v-text-field>
                 <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
               </v-col>
             </v-row>
-            <v-card v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
+            <div v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
               <v-card-text>
                 <v-hover v-slot="{ hover }">
                   <v-row>
@@ -71,7 +71,7 @@
                       <v-textarea v-model="task.input.content" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
                       <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
                     </v-col>
-                    <v-col sm=12 :md="md()" lg="12">
+                    <v-col sm="12">
                       <div>
                         {{ task.intro.content }}
                         <v-row v-if="task.input.content" justify="space-between" class="mt-2">
@@ -88,15 +88,15 @@
                  </v-row>
                </v-hover>
             </v-card-text>
-              <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
-                <v-row>
-                  <v-col md="2">
-                    <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
-                    <v-btn v-else @click="insertTask(step.tasks,taskKey)">Insert task</v-btn>
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
+            <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
+              <v-row>
+                <v-col md="2">
+                  <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
+                  <v-btn v-else @click="insertTask(step.tasks,taskKey)">Insert task</v-btn>
+                </v-col>
+              </v-row>
+            </v-card-actions>
+            </div>
             <v-card-actions v-if="activeDoc.edit || activeDoc.create">
               <v-btn v-if="i == (activeDoc.steps.length - 1)" @click="addStep()">Add step</v-btn>
             </v-card-actions>
