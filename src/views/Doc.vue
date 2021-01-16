@@ -143,7 +143,7 @@
       v-model="snackbar.status"
       :timeout="snackbar.timeout"
     >
-      {{ snackbar.text }}
+    <span class="text-truncate">{{ snackbar.text }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -213,10 +213,12 @@ export default {
       this.activeDoc.create= false
       this.createDoc(this.activeDoc)
     },
-    onCopy(){ 
-      this.snackbar.text = "You just copied"
+    onCopy(task){ 
+      const length = 30
+      const text = task.text.length > length ? task.text.substring(0,length) + "..." : task.text
+      this.snackbar.text = "Copied " + text 
       this.snackbar.status = true
-      // console.log('You just copied')
+      // console.log(e)
     },
     onError() {
       console.log('Error copy')
