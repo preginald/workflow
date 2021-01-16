@@ -1,7 +1,7 @@
 export const taskInterpreter = {
-  data: () => {
-
-  },
+  data: () => ({
+    taskContainerClass: 'pre',
+  }),
   methods: {
     taskInterpreter(task) {
       if(task){

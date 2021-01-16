@@ -140,11 +140,11 @@
         </v-card>
       </v-col>
     </v-row>
- <v-snackbar
+    <v-snackbar
       v-model="snackbar.status"
       :timeout="snackbar.timeout"
     >
-    <span>{{ snackbar.text }}</span>
+      <span>{{ snackbar.text }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -310,7 +310,6 @@ export default {
     inputLabel: '',
     inputName: '',
     inputValue: '',
-    taskContainerClass: 'pre',
     selectedTaskType: [],
     slugHint: '',
     taskForm: [{intro: false, input: false, output: false}],
