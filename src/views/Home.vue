@@ -85,23 +85,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar.status"
-      :timeout="snackbar.timeout"
-    >
-      <span>{{ snackbar.text }}</span>
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackbar.status = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -145,40 +128,6 @@ export default {
     init(){
       this.setActiveDoc(this.doc)
     },
-    onCopy(task){ 
-      const length = 30
-      const text = task.text.length > length ? task.text.substring(0,length) + "..." : task.text
-      this.snackbar.text = "Copied " + text 
-      this.snackbar.status = true
-      // console.log(e)
-    },
-    onError() {
-      console.log('Error copy')
-    },
   } 
 };
 </script>
-
-<style scoped>
-
-.pre {
-  display: block;
-  white-space: pre;
-  font-family: "Roberto Mono", Monaco, courier, monospace;
-  padding: 1.2em 1.4em;
-  font-size: 0.85rem;
-  position: relative;
-  overflow-y: hidden;
-}
-
-.bash::before {
-  content: "$";
-}
-
-.pre ::before {
-  position: relative;
-  left: 0;
-  padding: 10px;
-}
-
-</style>
