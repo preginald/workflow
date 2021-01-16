@@ -10,6 +10,7 @@
           <p> A document consists of steps and tasks </p>
         </v-row>
         <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
+          <v-toolbar-title class="text-capitalize">{{ activeDoc.status }}</v-toolbar-title>
 
           <v-spacer></v-spacer>
           <template v-if="activeDoc.edit">
