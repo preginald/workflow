@@ -58,7 +58,7 @@
                 <v-hover v-slot="{ hover }">
                   <v-row>
                     <v-col v-if="activeDoc.edit || activeDoc.create">
-                      <v-toolbar v-if="hover" dense>
+                      <v-toolbar v-if="hover" dense class="mb-4">
                         <v-btn-toggle v-model="task.typeKey" dense>
                           <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
                         </v-btn-toggle>
@@ -67,9 +67,9 @@
                           <v-btn @click="toggleTaskOutputForm(task.output)">Out</v-btn>
                         </v-btn-toggle>
                       </v-toolbar>
-                      <v-textarea v-if="task.intro.form" v-model="task.intro.content" hint="Introduction" rows="2"></v-textarea>
-                      <v-textarea v-model="task.input.content" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
-                      <v-textarea v-if="task.output.form" v-model="task.output.content" hint="Output" rows="2"></v-textarea>
+                      <v-textarea v-if="task.intro.form" v-model="task.intro.content" label="Introduction" rows="2"></v-textarea>
+                      <v-textarea v-model="task.input.content" label="Input" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
+                      <v-textarea v-if="task.output.form" v-model="task.output.content" label="Output" rows="2"></v-textarea>
                     </v-col>
                     <v-col sm="12">
                       <div>
