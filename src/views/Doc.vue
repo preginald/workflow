@@ -67,9 +67,9 @@
                           <v-btn @click="toggleTaskOutputForm(task.output)">Out</v-btn>
                         </v-btn-toggle>
                       </v-toolbar>
-                      <v-textarea v-if="task.intro.form" v-model="task.intro.content" label="Introduction" rows="2"></v-textarea>
+                      <v-textarea v-if="task.intro.form" v-model="task.intro.content" label="Introduction" :rows="rows(task.intro.content)"></v-textarea>
                       <v-textarea v-model="task.input.content" label="Input" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
-                      <v-textarea v-if="task.output.form" v-model="task.output.content" label="Output" rows="2"></v-textarea>
+                      <v-textarea v-if="task.output.form" v-model="task.output.content" label="Output" :rows="rows(task.output.content)"></v-textarea>
                     </v-col>
                     <v-col sm="12">
                       <div>
