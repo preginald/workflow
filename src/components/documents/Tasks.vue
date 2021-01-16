@@ -44,7 +44,7 @@ export default {
   mixins: [taskInterpreter],
   props: ['task'],
   computed: {
-    ...mapState(["taskTypes"]),
+    ...mapState(["activeDoc", "taskTypes"]),
   },
   name: "Tasks",
   methods: {
