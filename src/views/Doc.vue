@@ -52,7 +52,6 @@
             <v-row>
               <v-col sm="12" v-if="activeDoc.edit || activeDoc.create">
                 <v-text-field label="Title" v-model="step.title"></v-text-field>
-                <v-card-title class="text-h9">{{ step.tasks.length }} Tasks</v-card-title>
               </v-col>
             </v-row>
             <div v-for="(task, taskKey) in step.tasks" :key="taskKey" class="mb-3">
@@ -68,6 +67,9 @@
                           <v-btn @click="toggleTaskIntroForm(task.intro)">Int</v-btn>
                           <v-btn @click="toggleTaskOutputForm(task.output)">Out</v-btn>
                         </v-btn-toggle>
+                      </v-toolbar>
+                      <v-toolbar v-else dense class="mb-4">
+                        <v-toolbar-title>Task: {{ taskKey + 1 }}</v-toolbar-title>
                       </v-toolbar>
                       <v-textarea v-if="task.intro.form" v-model="task.intro.content" label="Introduction" :rows="rows(task.intro.content)"></v-textarea>
                       <v-textarea v-model="task.input.content" label="Input" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
@@ -269,10 +271,12 @@ export default {
       this.activeDoc.steps.splice(i,1)
     },
     addTask(i){
-      this.activeDoc.steps[i].tasks.push(this.newTask)
+      const newTask= {intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }}
+      this.activeDoc.steps[i].tasks.push(newTask)
     },
     insertTask(tasks,taskKey){
-      tasks.splice(taskKey+1, 0, this.newTask)
+      const newTask= {intro: {content: '', form: false }, input: {content: '', form: false }, output: {content: '', form: false }}
+      tasks.splice(taskKey+1, 0, newTask)
     },
     setTaskType(task,type){
       task.type = type
