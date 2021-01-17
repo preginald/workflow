@@ -130,23 +130,6 @@
     </v-row>
     <!-- <v-row v-else> -->
     <Loader v-else />
-    <v-snackbar
-      v-model="snackbar.status"
-      :timeout="snackbar.timeout"
-    >
-      <span>{{ snackbar.text }}</span>
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackbar.status = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -321,7 +304,6 @@ export default {
       ],
     },
     disabled: null,
-    snackbar: {status: false, text: '', timeout: 2000}
     // step: 1,
   }),
 };

@@ -17,6 +17,7 @@ export default new Vuex.Store({
     userLink: '',
     docValidation: {slug: false},
     taskInputHint: '',
+    snackbar: {status: false, text: '', timeout: 2000},
   },
   mutations: {
     setUser(state, user){
@@ -39,6 +40,10 @@ export default new Vuex.Store({
     },
     setNav( state, status ) {
       state.nav = status
+    },
+    setSnackbar( state, snackbar ) {
+      state.snackbar.status = snackbar.status
+      state.snackbar.text= snackbar.text
     },
     setIsOwner( state, val ) {
       state.isOwner = val
@@ -238,21 +243,25 @@ export default new Vuex.Store({
           console.log('Saved doc: ', docRef.id)
           commit('setActiveDoc', doc)
           commit('setEditDoc', editStatus) 
+          commit('setSnackbar', {status: true, text: "Doc successfully created"})
           router.push({ name: 'ReadDoc', params: { userName: doc.username, docSlug: doc.slug } })
         })
         .catch(error => {
           console.log("Error adding document: ", error)
+          commit('setSnackbar', {status: true, text: "Error creating doc!"})
         })
     },
     async deleteDoc({commit}, doc) {
       await fb.docsCollection.doc(doc.id).delete()
         .then(() =>{
           console.log("Document successfully deleted!")
+          commit('setSnackbar', {status: true, text: "Doc successfully deleted forever!"})
           router.push({ name: 'UserHome', params: { userName: doc.username} })
           commit('setActiveDoc', {})
         })
         .catch((error) => {
           console.log("Error removing document: ", error)
+          commit('setSnackbar', {status: true, text: "Error deleting doc!"})
         })
     },
     async softDeleteDoc({ commit },doc){
@@ -262,10 +271,12 @@ export default new Vuex.Store({
         })
         .then(() => {
           console.log("Document successfully updated!")
+          commit('setSnackbar', {status: true, text: "Doc successfully soft deleted!"})
           doc.status = "delete"
         })
         .catch(error => {
           console.log("Error updating document: ", error)
+          commit('setSnackbar', {status: true, text: "Error soft deleting doc!"})
         })
       commit('setActiveDoc', doc)
     },
@@ -276,9 +287,11 @@ export default new Vuex.Store({
         .update(doc)
         .then(() => {
           console.log("Document successfully updated!")
+          commit('setSnackbar', {status: true, text: "Doc successfully saved!"})
         })
         .catch(error => {
           console.log("Error updating document: ", error)
+          commit('setSnackbar', {status: true, text: "Error saving doc!"})
         })
       commit('setActiveDoc', doc)
     },
@@ -288,9 +301,11 @@ export default new Vuex.Store({
         .update(doc)
         .then(() => {
           console.log("Document successfully updated!")
+          commit('setSnackbar', {status: true, text: "Doc successfully updated!"})
         })
         .catch(error => {
           console.log("Error updating document: ", error)
+          commit('setSnackbar', {status: true, text: "Error updating doc!"})
         })
       commit('setActiveDoc', doc)
     },

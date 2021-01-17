@@ -1,9 +1,9 @@
 <template>
-  <v-snackbar
-      v-model="snack"
-      :timeout="timeout"
+    <v-snackbar
+      v-model="snackbar.status"
+      :timeout="snackbar.timeout"
     >
-      {{ text }}
+      <span>{{ snackbar.text }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -26,21 +26,11 @@ export default {
 
   computed: {
      ...mapState(["snackbar"]),
-    snack: {
-      get: () => {
-        return this.snackbar
-      },
-      set: () => {
-        return this.snackbar
-      }
-    },
   },
   methods: {
     ...mapMutations(["setSnackbar"]),
   },
   data: () => ({
-      text: 'My timeout is set to 2000.',
-      timeout: 2000,
     }),
 
 }; </script>

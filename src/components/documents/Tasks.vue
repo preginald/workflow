@@ -16,28 +16,11 @@
         </div>
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar.status"
-      :timeout="snackbar.timeout"
-    >
-      <span>{{ snackbar.text }}</span>
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackbar.status = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { taskInterpreter } from "../../mixins/interpreter.js"
 
 export default {
@@ -48,11 +31,14 @@ export default {
   },
   name: "Tasks",
   methods: {
+    ...mapMutations(['setSnackbar']),
     onCopy(task){ 
       const length = 30
       const text = task.text.length > length ? task.text.substring(0,length) + "..." : task.text
-      this.snackbar.text = "Copied " + text 
-      this.snackbar.status = true
+      let snackbar = {}
+      snackbar.text = "Copied " + text 
+      snackbar.status = true
+      this.setSnackbar(snackbar)
       // console.log(e)
     },
     onError() {
@@ -66,7 +52,6 @@ export default {
     },
   },
   data: () => ({
-    snackbar: {status: false, text: '', timeout: 2000}
     // step: 1,
   }),
 };
