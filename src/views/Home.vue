@@ -1,6 +1,11 @@
 <template>
   <v-container>
     <v-row>
+      <v-col 
+        md="7" offset-md="2"
+        lg="8" offset-lg="2"
+        >
+    <v-row>
       <v-col>
         <h1>Welcome to <span class="blue--text darken-2">doc</span><span class="red--text">Re</span><span class="blue--text">place</span></h1>
       </v-col>
@@ -17,7 +22,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col
+        sm="12"
+        md="6"
+        >
         <v-card>
           <v-card-title>What it isn't</v-card-title>
           <v-card-text>
@@ -26,7 +34,10 @@
         </v-card>
         <h2></h2>
       </v-col>
-      <v-col>
+      <v-col
+        sm="12"
+        md="6"
+        >
         <v-card>
           <v-card-title>What it is</v-card-title>
           <v-card-text>
@@ -67,7 +78,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col
+        sm="12"
+        md="6"
+        >
         <v-card>
           <v-card-title>Who is it for?</v-card-title>
           <v-card-text>
@@ -75,7 +89,10 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col
+        sm="12"
+        md="6"
+        >
         <v-card>
           <v-card-title>Here are more examples</v-card-title>
           <v-card-text>
@@ -83,6 +100,8 @@
             <p><router-link :to="{ name: 'ReadDoc', params: { userName: 'preginald', docSlug: 'install-wordpress-on-apache2-virtualhost' }}">Install Wordpress on Apache2 VirtualHost</router-link></p>
           </v-card-text>
         </v-card>
+      </v-col>
+    </v-row>
       </v-col>
     </v-row>
   </v-container>
