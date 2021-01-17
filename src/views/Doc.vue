@@ -14,12 +14,12 @@
 
           <v-spacer></v-spacer>
           <template v-if="activeDoc.edit">
-            <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-            <v-btn icon v-else @click="softDeleteDoc(activeDoc)" color="blue" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
-            <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" color="orange" class="mx-1">Update</v-btn>
-            <v-btn text :disabled="disabled" @click="saveDoc(activeDoc)" color="green" class="mx-1">Save</v-btn>
-            <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-            <v-btn icon @click="toggleEditDoc()"><v-icon color="red">mdi-pencil-remove</v-icon></v-btn>
+            <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1" title="Delete forever"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+            <v-btn icon v-else @click="softDeleteDoc(activeDoc)" color="blue" class="mx-1" title="Soft delete"><v-icon>mdi-recycle</v-icon></v-btn>
+            <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" color="orange" class="mx-1" title="Update">Update</v-btn>
+            <v-btn text :disabled="disabled" @click="saveDoc(activeDoc)" color="green mx-1" title="Save and close">Save</v-btn>
+            <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green mx-1" title="Save and and publish">Publish</v-btn>
+            <v-btn icon @click="toggleEditDoc()" class="mx-1" title="Close without saving"><v-icon color="red">mdi-pencil-remove</v-icon></v-btn>
           </template>
           <template v-if="activeDoc.create">
             <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
@@ -27,7 +27,7 @@
             <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
           </template>
           <template v-if="!activeDoc.edit">
-            <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+            <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1" title="Edit"><v-icon>mdi-pencil-outline</v-icon></v-btn>
           </template>
         </v-toolbar>
         <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
