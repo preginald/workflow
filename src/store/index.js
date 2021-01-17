@@ -17,6 +17,7 @@ export default new Vuex.Store({
     userLink: '',
     docValidation: {slug: false},
     taskInputHint: '',
+    loading: false,
   },
   mutations: {
     setUser(state, user){
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     setNav( state, status ) {
       state.nav = status
+    },
+    setLoading( state, status  ) {
+      state.loading = status
     },
     setIsOwner( state, val ) {
       state.isOwner = val

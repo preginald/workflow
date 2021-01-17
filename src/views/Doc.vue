@@ -14,32 +14,32 @@
 
           <v-spacer></v-spacer>
           <template v-if="activeDoc.edit">
-        <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-        <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
-        <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
-        <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-        <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
-      </template>
-      <template v-if="activeDoc.create">
-        <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
-        <v-btn :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-        <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-      <template v-if="!activeDoc.edit">
-        <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
-      </template>
-    </v-toolbar>
-    <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
-      <v-card-text>
-        <v-row>
-          <v-col md="12" >
-            <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
-            <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
-            <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+            <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+            <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
+            <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
+            <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+            <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
+          </template>
+          <template v-if="activeDoc.create">
+            <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
+            <v-btn :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
+            <v-btn icon @click="toggleCreateDoc()"><v-icon>mdi-close</v-icon></v-btn>
+          </template>
+          <template v-if="!activeDoc.edit">
+            <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+          </template>
+        </v-toolbar>
+        <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col md="12" >
+                <v-text-field label="Title" :rules="rules.title" v-on:keyup="titleToSlug" v-model="activeDoc.title"></v-text-field>
+                <v-text-field label="Slug" :rules="rules.slug" :error-messages="slugHint" persistent-hint v-on:keyup="slugCheck(activeDoc.slug)" v-model="activeDoc.slug"></v-text-field>
+                <v-textarea label="Description" v-model="activeDoc.description"></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
         <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
           <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
           <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
@@ -127,6 +127,16 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row v-else>
+      <v-col>
+        <v-card
+          :loading="loading"
+          >
+          <v-card-title class="grey--text text--darken-3">Step 1: Fetch doc</v-card-title>
+        </v-card>
+      </v-col>
+
+    </v-row>
     <v-snackbar
       v-model="snackbar.status"
       :timeout="snackbar.timeout"
@@ -156,7 +166,7 @@ import { taskInterpreter } from "../mixins/interpreter.js"
 export default {
   mixins: [taskInterpreter],
   computed: {
-    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation","taskTypes","taskInputHint"]),
+    ...mapState(["activeDoc", "userLink","userProfile", "isOwner", "docValidation","taskTypes","taskInputHint","loading"]),
   },
   name: "Home",
   components: { 
@@ -167,9 +177,11 @@ export default {
     this.init()
   },
   methods: {
-    ...mapMutations(['setActiveDoc']),
+    ...mapMutations(['setActiveDoc', 'setLoading']),
     ...mapActions(['loadUserDoc','createDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
     init(){
+      this.setActiveDoc({})
+      this.setLoading(true)
       console.log(this.$route.name)
       if(this.$route.name === "ReadDoc"){
         this.loadUserDoc(this.$route.params)
@@ -187,6 +199,7 @@ export default {
       }
         this.setActiveDoc(newDoc)
       }
+      this.setLoading(false)
     },
     toggleTaskIntroForm(intro){
       intro.form = !intro.form
