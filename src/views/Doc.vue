@@ -127,16 +127,8 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-else>
-      <v-col>
-        <v-card
-          :loading="loading"
-          >
-          <v-card-title class="grey--text text--darken-3">Step 1: Fetch doc</v-card-title>
-        </v-card>
-      </v-col>
-
-    </v-row>
+    <!-- <v-row v-else> -->
+    <Loader v-else />
     <v-snackbar
       v-model="snackbar.status"
       :timeout="snackbar.timeout"
@@ -160,6 +152,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import Heading from "../components/documents/Heading";
+import Loader from "../components/documents/Loader";
 import Tasks from "../components/documents/Tasks";
 import { taskInterpreter } from "../mixins/interpreter.js"
 
@@ -171,17 +164,17 @@ export default {
   name: "Home",
   components: { 
     Heading, 
+    Loader,
     Tasks,
   },
   mounted() {
     this.init()
   },
   methods: {
-    ...mapMutations(['setActiveDoc', 'setLoading']),
+    ...mapMutations(['setActiveDoc']),
     ...mapActions(['loadUserDoc','createDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
     init(){
       this.setActiveDoc({})
-      this.setLoading(true)
       console.log(this.$route.name)
       if(this.$route.name === "ReadDoc"){
         this.loadUserDoc(this.$route.params)
@@ -199,7 +192,6 @@ export default {
       }
         this.setActiveDoc(newDoc)
       }
-      this.setLoading(false)
     },
     toggleTaskIntroForm(intro){
       intro.form = !intro.form
