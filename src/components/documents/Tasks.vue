@@ -5,12 +5,12 @@
         <div>
           <p>{{ task.intro.content }}</p>
           <v-row v-if="task.input.content" justify="space-between" class="mt-2">
-            <v-col><v-chip label x-small color="primary" class="text-uppercase">Input</v-chip></v-col>
+            <v-col class="mb-1"><v-chip label x-small color="primary" class="text-uppercase">Input</v-chip></v-col>
             <v-col v-if="task.type != 'none'" class="text-right"><v-chip label x-small color="black" text-color="white" class="text-uppercase">{{task.type}}</v-chip></v-col>
           </v-row>
           <v-sheet v-if="task.input.content" v-clipboard:copy="taskInterpreter(task.input.content)" v-clipboard:success="onCopy" v-clipboard:error="onError" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.input.content) }}</span></v-sheet>
           <v-row v-if="task.output.content" justify="space-between" class="mt-2">
-            <v-col><v-chip label x-small color="success" class="text-uppercase">Output</v-chip></v-col>
+            <v-col class="mb-1"><v-chip label x-small color="success" class="text-uppercase">Output</v-chip></v-col>
           </v-row>
           <v-sheet v-if="task.output.content" elevation="1" :class="taskContainerClass"><span :class="task.type">{{ taskInterpreter(task.output.content) }}</span></v-sheet>
         </div>
