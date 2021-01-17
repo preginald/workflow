@@ -15,10 +15,11 @@
           <v-spacer></v-spacer>
           <template v-if="activeDoc.edit">
             <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-            <v-btn icon v-else @click="softDeleteDoc(activeDoc)" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
-            <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" class="mx-1">Update</v-btn>
+            <v-btn icon v-else @click="softDeleteDoc(activeDoc)" color="blue" class="mx-1"><v-icon>mdi-recycle</v-icon></v-btn>
+            <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" color="orange" class="mx-1">Update</v-btn>
+            <v-btn text :disabled="disabled" @click="saveDoc(activeDoc)" color="green" class="mx-1">Save</v-btn>
             <v-btn v-if="activeDoc.status=='draft'" :disabled="disabled" @click="publish(activeDoc)" color="green" class="mx-1">Publish</v-btn>
-            <v-btn icon @click="toggleEditDoc()"><v-icon>mdi-pencil-remove</v-icon></v-btn>
+            <v-btn icon @click="toggleEditDoc()"><v-icon color="red">mdi-pencil-remove</v-icon></v-btn>
           </template>
           <template v-if="activeDoc.create">
             <v-btn :disabled="disabled" @click="saveDraft(activeDoc)" class="mx-1">Save draft</v-btn>
@@ -172,7 +173,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setActiveDoc']),
-    ...mapActions(['loadUserDoc','createDoc','updateDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
+    ...mapActions(['loadUserDoc','createDoc','updateDoc', 'saveDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
     init(){
       this.setActiveDoc({})
       console.log(this.$route.name)
