@@ -30,6 +30,7 @@
             <v-btn icon @click="toggleEditDoc()" v-if="isOwner && this.$route.name == 'ReadDoc'" class="mx-1" title="Edit"><v-icon>mdi-pencil-outline</v-icon></v-btn>
           </template>
         </v-toolbar>
+        <Inputs />
         <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
           <v-card-text>
             <v-row>
@@ -115,19 +116,6 @@
             <v-btn @click="addInput()">Add input</v-btn>
           </v-card-actions>
         </v-card>
-        <v-card>
-          <v-card-text>
-            <v-row>
-              <v-col v-for="input in activeDoc.inputs" :key="input.name" sm="12">
-                <v-text-field
-              :label="input.label"
-              v-model="input.value"
-              :hint="input.name"
-            ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
       </v-col>
     </v-row>
     <!-- <v-row v-else> -->
@@ -138,6 +126,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import Heading from "../components/documents/Heading";
+import Inputs from "../components/documents/Inputs";
 import Loader from "../components/documents/Loader";
 import Tasks from "../components/documents/Tasks";
 import { taskInterpreter } from "../mixins/interpreter.js"
@@ -150,6 +139,7 @@ export default {
   name: "Home",
   components: { 
     Heading, 
+    Inputs,
     Loader,
     Tasks,
   },
