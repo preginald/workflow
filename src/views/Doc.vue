@@ -6,8 +6,10 @@
 
       <v-col sm="12" md="11" lg="10" xl="7">
         <v-row v-if="activeDoc.create">
-          <h1 class="text-h5">Create a new document</h1>
-          <p> A document consists of steps and tasks </p>
+          <v-col>
+            <h1 class="text-h5">Create a new document</h1>
+            <p> A document consists of steps and tasks </p>
+          </v-col>
         </v-row>
         <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
           <v-toolbar-title class="text-capitalize">{{ activeDoc.status }}</v-toolbar-title>
