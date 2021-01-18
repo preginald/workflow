@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="mb-3">
     <v-card-text>
       <v-row>
         <v-col v-for="input in activeDoc.inputs" 
