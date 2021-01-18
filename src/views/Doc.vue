@@ -4,7 +4,7 @@
     <v-divider class="my-3"></v-divider>
     <v-row v-if="Object.keys(activeDoc).length">
 
-      <v-col sm="12" md="9" lg="7">
+      <v-col sm="12" md="11" lg="10" xl="7">
         <v-row v-if="activeDoc.create">
           <h1 class="text-h5">Create a new document</h1>
           <p> A document consists of steps and tasks </p>

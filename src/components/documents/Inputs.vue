@@ -4,7 +4,7 @@
       <v-row>
         <v-col v-for="input in activeDoc.inputs" 
           :key="input.name" 
-          cols="6" sm="4" md="6" lg="4" xl="3">
+          cols="6" sm="4" md="4" lg="4" xl="3">
           <v-text-field
         :label="input.label"
         v-model="input.value"
