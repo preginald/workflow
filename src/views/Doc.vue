@@ -64,9 +64,10 @@
                         <v-btn-toggle v-model="task.typeKey" dense>
                           <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
                         </v-btn-toggle>
+                        <v-divider vertical class="mx-1"></v-divider>
                         <v-btn-toggle v-model="task.form" multiple dense>
-                          <v-btn @click="toggleTaskIntroForm(task.intro)">Int</v-btn>
-                          <v-btn @click="toggleTaskOutputForm(task.output)">Out</v-btn>
+                          <v-btn icon @click="toggleTaskIntroForm(task.intro)" title="Introduction"><v-icon>mdi-alpha-i-box-outline</v-icon></v-btn>
+                          <v-btn icon @click="toggleTaskOutputForm(task.output)" title="Output"><v-icon>mdi-alpha-o-box-outline</v-icon></v-btn>
                         </v-btn-toggle>
                       </v-toolbar>
                       <v-toolbar v-else dense class="mb-4">
