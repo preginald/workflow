@@ -45,9 +45,7 @@
           </v-card-text>
         </v-card>
         <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
-          <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}
-            <v-spacer></v-spacer>
-          </v-card-title>
+          <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
           <v-app-bar flat v-if="(isOwner && activeDoc.edit) || activeDoc.create">
             <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title>
             <v-spacer></v-spacer>
