@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <v-row>
+    <v-row class="mt-2">
       <v-col sm="12">
         <div>
           <p>{{ task.intro.content }}</p>
@@ -16,7 +15,6 @@
         </div>
       </v-col>
     </v-row>
-  </div>
 </template>
 
 <script>

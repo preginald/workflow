@@ -11,11 +11,11 @@
             <p> A document consists of steps and tasks </p>
           </v-col>
         </v-row>
-        <v-toolbar dense v-if="isOwner || activeDoc.create" class="mb-3">
+        <v-toolbar dense v-if="(isOwner && activeDoc.edit ) || activeDoc.create" class="mb-3">
           <v-toolbar-title class="text-capitalize">{{ activeDoc.status }}</v-toolbar-title>
 
           <v-spacer></v-spacer>
-          <template v-if="activeDoc.edit">
+          <template v-if="isOwner && activeDoc.edit">
             <v-btn icon v-if="activeDoc.status=='delete'" @click="deleteDoc(activeDoc)" class="mx-1" title="Delete forever"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
             <v-btn icon v-else @click="softDeleteDoc(activeDoc)" color="blue" class="mx-1" title="Soft delete"><v-icon>mdi-recycle</v-icon></v-btn>
             <v-btn text :disabled="disabled" @click="updateDoc(activeDoc)" color="orange" class="mx-1" title="Update">Update</v-btn>
@@ -33,7 +33,7 @@
           </template>
         </v-toolbar>
         <Inputs />
-        <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-3">
+        <v-card v-if="(isOwner && activeDoc.edit) || activeDoc.create" class="mb-3">
           <v-card-text>
             <v-row>
               <v-col md="12" >
@@ -46,14 +46,18 @@
         </v-card>
         <v-card v-for="(step, i) in activeDoc.steps" v-bind:key="i" class="mb-3">
           <v-card-title v-if="!activeDoc.edit && !activeDoc.create" class="mb-3">{{stepNumber(i)}}: {{ step.title}}</v-card-title>
-          <v-app-bar flat v-if="activeDoc.edit || activeDoc.create">
+          <v-app-bar flat v-if="(isOwner && activeDoc.edit) || activeDoc.create">
             <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon v-if="i > 0" @click="deleteStep(i)"><v-icon>mdi-delete</v-icon></v-btn>
           </v-app-bar>
+          <!-- <v-app-bar flat v-else> -->
+          <!--   <v-toolbar-title>{{stepNumber(i)}}: {{ step.title}}</v-toolbar-title> -->
+          <!--   <v-spacer></v-spacer> -->
+          <!-- </v-app-bar> -->
           <v-card-text>
             <v-row>
-              <v-col sm="12" v-if="activeDoc.edit || activeDoc.create">
+              <v-col sm="12" v-if="(isOwner && activeDoc.edit) || activeDoc.create">
                 <v-text-field label="Title" v-model="step.title"></v-text-field>
               </v-col>
             </v-row>
@@ -61,7 +65,7 @@
               <v-card-text>
                 <v-hover v-slot="{ hover }">
                   <v-row>
-                    <v-col v-if="activeDoc.edit || activeDoc.create">
+                    <v-col v-if="(isOwner && activeDoc.edit) || activeDoc.create">
                       <v-toolbar v-if="hover" dense class="mb-4">
                         <v-btn-toggle v-model="task.typeKey" dense>
                           <v-btn @click="setTaskType(task,type)" v-for="type in taskTypes" :key="type">{{ type }}</v-btn>
@@ -79,11 +83,11 @@
                       <v-textarea v-model="task.input.content" label="Input" :hint="taskInputHint" :rows="rows(task.input.content)"></v-textarea>
                       <v-textarea v-if="task.output.form" v-model="task.output.content" label="Output" :rows="rows(task.output.content)"></v-textarea>
                     </v-col>
-                 </v-row>
-               </v-hover>
+                  </v-row>
+                </v-hover>
               <Tasks :task="task"></Tasks>
             </v-card-text>
-            <v-card-actions v-if="activeDoc.edit || activeDoc.create"> 
+            <v-card-actions v-if="(isOwner && activeDoc.edit) || activeDoc.create"> 
               <v-row>
                 <v-col md="2">
                   <v-btn v-if="taskKey == (step.tasks.length - 1)" @click="addTask(i)">Add task</v-btn>
@@ -92,7 +96,7 @@
               </v-row>
             </v-card-actions>
             </div>
-            <v-card-actions v-if="activeDoc.edit || activeDoc.create">
+            <v-card-actions v-if="(isOwner && activeDoc.edit) || activeDoc.create">
               <v-btn v-if="i == (activeDoc.steps.length - 1)" @click="addStep()">Add step</v-btn>
             </v-card-actions>
           </v-card-text>
@@ -100,7 +104,7 @@
 
       </v-col>
       <v-col sm="12" md="3" lg="2">
-        <v-card v-if="activeDoc.edit || activeDoc.create" class="mb-1">
+        <v-card v-if="(isOwner && activeDoc.edit) || activeDoc.create" class="mb-1">
           <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
             <v-row>
