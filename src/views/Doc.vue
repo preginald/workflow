@@ -11,7 +11,7 @@
             <p> A document consists of steps and tasks </p>
           </v-col>
         </v-row>
-        <v-toolbar dense v-if="isOwner" class="mb-3">
+        <v-toolbar dense v-if="userProfile" class="mb-3">
           <v-toolbar-title class="text-capitalize">{{ activeDoc.status }}</v-toolbar-title>
 
           <v-spacer></v-spacer>
