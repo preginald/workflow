@@ -17,6 +17,9 @@ yarn-error.log*
 pnpm-debug.log*
 debug.log
 
+# Cache files
+.firebase/*.cache
+
 # Editor directories and files
 .idea
 .vscode
