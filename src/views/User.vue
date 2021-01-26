@@ -26,7 +26,7 @@
           </v-list>
         </v-card>
         <v-card v-else>
-          <Loader />
+          <Loader class="mt-3"/>
         </v-card>
       </v-col>
     </v-row>
