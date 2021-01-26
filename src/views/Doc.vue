@@ -121,8 +121,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- <v-row v-else> -->
-    <Loader v-else />
+    <v-row v-else>
+      <v-col sm="12" md="11" lg="10" xl="7">
+        <Loader />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
