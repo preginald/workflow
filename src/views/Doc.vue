@@ -167,6 +167,7 @@ export default {
         title: '',
         slug: '',
         description: '',
+        status: 'edit',
         variableTag: 'vv',
         steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
         inputs: [],
@@ -183,8 +184,13 @@ export default {
     },
     publish(){
       this.activeDoc.status = 'publish'
-      this.activeDoc.create= false
-      this.updateDoc(this.activeDoc)
+      this.activeDoc.edit = false
+      if(this.activeDoc.create) {
+        this.activeDoc.create= false
+        this.createDoc(this.activeDoc)
+      } else {
+        this.updateDoc(this.activeDoc)
+      }
     },
     saveDraft(){
       this.activeDoc.status = 'draft'
