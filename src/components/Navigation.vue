@@ -9,7 +9,7 @@
 
       <v-spacer></v-spacer>
       <template v-if="nav"> 
-        <v-btn icon @click="setCreateDoc(true)" to="/new"><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn icon @click="createNewDoc()"><v-icon>mdi-plus</v-icon></v-btn>
         <v-btn icon @click="logout()"><v-icon>mdi-logout-variant</v-icon></v-btn>
       </template>
       <template v-else> 
@@ -24,6 +24,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import router from "../router";
 
 export default {
   name: "Navigation",
@@ -32,8 +33,24 @@ export default {
      ...mapState(["nav","userProfile","isOwner","userLink"]),
   },
   methods: {
-    ...mapMutations(["setCreateDoc"]),
+    ...mapMutations(["setActiveDoc"]),
     ...mapActions(["toggleEditDoc","logout"]),
+    createNewDoc(){
+      let newDoc = {
+        title: '',
+        slug: '',
+        description: '',
+        status: 'edit',
+        variableTag: 'vv',
+        steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
+        inputs: [],
+        create: true,
+      }
+      this.setActiveDoc(newDoc)
+      router.push({
+        name: "CreateDoc",
+      });
+    },
     init(){
       console.log()
     },

@@ -156,23 +156,21 @@ export default {
     ...mapMutations(['setActiveDoc']),
     ...mapActions(['loadUserDoc','createDoc','updateDoc', 'saveDoc','deleteDoc', 'softDeleteDoc','slugCheck','toggleCreateDoc','toggleEditDoc']),
     init(){
-      this.setActiveDoc({})
-      console.log(this.$route.name)
       if(this.$route.name === "ReadDoc"){
         this.loadUserDoc(this.$route.params)
       }
 
       if(this.$route.name === "CreateDoc"){
-      let newDoc = {
-        title: '',
-        slug: '',
-        description: '',
-        status: 'edit',
-        variableTag: 'vv',
-        steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
-        inputs: [],
-        create: true,
-      }
+        let newDoc = {
+          title: '',
+          slug: '',
+          description: '',
+          status: 'edit',
+          variableTag: 'vv',
+          steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
+          inputs: [],
+          create: true,
+        }
         this.setActiveDoc(newDoc)
       }
     },
