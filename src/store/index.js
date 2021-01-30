@@ -209,6 +209,7 @@ export default new Vuex.Store({
       } else {
         dispatch("fetchActiveDoc", doc);
       }
+      dispatch("hintsFromTaskInputs", doc);
     },
     async isOwner({ commit, state }) {
       var currentUser = await fb.auth.currentUser;

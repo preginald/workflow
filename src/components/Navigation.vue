@@ -33,7 +33,7 @@ export default {
      ...mapState(["nav","userProfile","isOwner","userLink"]),
   },
   methods: {
-    ...mapMutations(["setActiveDoc"]),
+    ...mapMutations(["setActiveDoc", "setTaskInputHint"]),
     ...mapActions(["toggleEditDoc","logout"]),
     createNewDoc(){
       let newDoc = {
@@ -47,6 +47,7 @@ export default {
         create: true,
       }
       this.setActiveDoc(newDoc)
+      this.setTaskInputHint("")
       router.push({
         name: "CreateDoc",
       });
