@@ -1,70 +1,72 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import { auth } from '../firebase'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import { auth } from "../firebase";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: () =>
-      import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    path: "/",
+    name: "Home",
+    component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
   },
   {
-    path: '/new',
-    name: 'CreateDoc',
-    component: () =>
-      import(/* webpackChunkName: "new" */ '../views/Doc.vue'),
+    path: "/new",
+    name: "CreateDoc",
+    component: () => import(/* webpackChunkName: "new" */ "../views/Doc.vue"),
     meta: {
-      requiresAuth: true
-    } 
+      requiresAuth: true,
+    },
   },
   {
-    path: '/signup',
-    name: 'Signup',
+    path: "/signup",
+    name: "Signup",
     component: () =>
-      import(/* webpackChunkName: "register" */ '../views/Signup.vue'),
+      import(/* webpackChunkName: "register" */ "../views/Signup.vue"),
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: "/login",
+    name: "Login",
     component: () =>
-      import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
   },
   {
-    path: '/test/:userName/:docSlug',
-    name: 'TestDoc',
+    path: "/commands/:command",
+    name: "ReadCommand",
     component: () =>
-      import(/* webpackChunkName: "test" */ '../views/TestDoc.vue'),
+      import(/* webpackChunkName: "test" */ "../views/Command.vue"),
   },
   {
-    path: '/:userName',
-    name: 'UserHome',
+    path: "/test/:userName/:docSlug",
+    name: "TestDoc",
     component: () =>
-      import(/* webpackChunkName: "user" */ '../views/User.vue'),
+      import(/* webpackChunkName: "test" */ "../views/TestDoc.vue"),
   },
   {
-    path: '/:userName/:docSlug',
-    name: 'ReadDoc',
-    component: () =>
-      import(/* webpackChunkName: "test" */ '../views/Doc.vue'),
+    path: "/:userName",
+    name: "UserHome",
+    component: () => import(/* webpackChunkName: "user" */ "../views/User.vue"),
+  },
+  {
+    path: "/:userName/:docSlug",
+    name: "ReadDoc",
+    component: () => import(/* webpackChunkName: "test" */ "../views/Doc.vue"),
   },
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   routes,
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
+  const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
 
   if (requiresAuth && !auth.currentUser) {
-    next('/login')
+    next("/login");
   } else {
-    next()
+    next();
   }
-})
+});
 
 export default router;
