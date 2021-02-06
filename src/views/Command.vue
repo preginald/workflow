@@ -72,6 +72,9 @@
           </v-col>
         </v-row>
       </v-card-text>
+      <v-card-actions>
+        <v-btn @click="addCommand()">Add command</v-btn>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -107,7 +110,12 @@ export default {
         {type: "boolean", state: false, label: "human readable", name: "human", value: "h"},
       ],
     }
-  })
+  }),
+  methods: {
+    addCommand(){
+      console.log(this.activeDoc)
+    }
+  },
 }
 </script>
 
