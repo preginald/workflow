@@ -366,6 +366,34 @@ export default new Vuex.Store({
         steps: state.activeDoc.steps,
       });
     },
+    async createCommand({ state, commit }, command) {
+      command.username = state.userProfile.username;
+      command.uid = state.userProfile.uid;
+
+      await fb.commandsCollection
+        .add(command)
+        .then((docRef) => {
+          console.log("Saved command: ", docRef.id);
+          command.id = docRef.id;
+          // commit("setActiveDoc", doc);
+          // commit("setEditDoc", editStatus);
+          commit("setSnackbar", {
+            status: true,
+            text: "Command successfully created",
+          });
+          router.push({
+            //name: "ReadDoc",
+            //params: { userName: doc.username, docSlug: doc.slug },
+          });
+        })
+        .catch((error) => {
+          console.log("Error adding command: ", error);
+          commit("setSnackbar", {
+            status: true,
+            text: "Error creating command!",
+          });
+        });
+    },
     async slugCheck({ state, commit }) {
       if (state.docSlugs) {
         let result = state.docSlugs.some((doc) => {
