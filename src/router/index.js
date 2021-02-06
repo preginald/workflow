@@ -31,7 +31,7 @@ const routes = [
       import(/* webpackChunkName: "login" */ "../views/Login.vue"),
   },
   {
-    path: "/commands/:command",
+    path: "/commands/:commandSlug",
     name: "ReadCommand",
     component: () =>
       import(/* webpackChunkName: "test" */ "../views/Command.vue"),

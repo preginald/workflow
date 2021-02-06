@@ -12,6 +12,7 @@ export default new Vuex.Store({
     userDocs: null,
     taskTypes: ["none", "bash", "html", "js", "mysql", "php", "yml"],
     activeDoc: {},
+    activeCommand: {},
     nav: false,
     isOwner: false,
     userLink: "",
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     setActiveDoc(state, doc) {
       state.activeDoc = doc;
+    },
+    setActiveCommand(state, command) {
+      state.activeCommand = command;
     },
     setNav(state, status) {
       state.nav = status;
@@ -393,6 +397,24 @@ export default new Vuex.Store({
             text: "Error creating command!",
           });
         });
+    },
+    async fetchCommand({ state, commit }, params) {
+      if (typeof state.activeCommand.length == "undefined") {
+        // fetch active command
+        await fb.commandsCollection
+          .where("slug", "==", params.commandSlug)
+          .get()
+          .then((querySnapshot) => {
+            const data = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            // dispatch("processor", data[0]);
+            // set active doc in state
+            // commit('setActiveDoc',data[0])
+            commit("setActiveCommand", data[0]);
+          });
+      }
     },
     async slugCheck({ state, commit }) {
       if (state.docSlugs) {

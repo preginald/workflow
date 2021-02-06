@@ -1,85 +1,96 @@
 <template>
   <v-container>
-    <h1>{{ activeDoc.name }}</h1>
+    <h1>{{ activeCommand.name }}</h1>
     <h2>Syntax</h2>
-    <v-card v-if="activeDoc.inputs.length" class="mb-3">
-      <v-card-text>
-        <v-row>
-          <v-col v-for="input in activeDoc.inputs" 
-            :key="input.name" 
-            cols="6" sm="4" md="4" lg="4" xl="3">
-            <v-text-field
-          :label="input.label"
-          v-model="input.value"
-          :hint="input.name"
-        ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-card v-if="activeDoc.options.length" class="mb-3">
-      <v-card-text>
-        <v-row>
-          <v-col v-for="option in activeDoc.options" 
-            :key="option.name" 
-            cols="6" sm="4" md="4" lg="4" xl="3">
-            <div v-if="option.type == 'boolean'">
-              <v-checkbox @change="optionChecker(option.state)" v-model="option.state" :label="option.label"></v-checkbox>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-sheet  elevation="1" class="pre"><span>{{ taskInterpreter(activeDoc.input.content) }}</span></v-sheet>
-    
-    <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2'" class="mb-3">
-      <v-card-text>
-        <v-row>
-          <v-col md="12" >
-            <v-text-field label="Name" v-model="activeDoc.name"></v-text-field>
-            <v-text-field label="Syntax" v-model="activeDoc.syntax"></v-text-field>
-            <v-card v-if="activeDoc.inputs.length" class="mb-3">
-              <v-card-text>
-                <v-row>
-                  <v-col v-for="input in activeDoc.inputs" 
-                    :key="input.name" 
-                    cols="6" sm="4" md="4" lg="4" xl="3">
-                    <v-text-field
-                  :label="input.label"
-                  v-model="input.value"
-                  :hint="input.name"
-                ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-            <v-card v-if="activeDoc.options.length" class="mb-3">
-              <v-card-text>
-                <v-row>
-                  <v-col v-for="option in activeDoc.options" 
-                    :key="option.name" 
-                    cols="6" sm="4" md="4" lg="4" xl="3">
-                    <v-text-field
-                  :label="option.label"
-                  v-model="option.value"
-                  :hint="option.name"
-                ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-            <v-textarea label="Form" v-model="activeDocString"></v-textarea>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn @click="addCommand()">Add command</v-btn>
-      </v-card-actions>
-    </v-card>
+    <v-row v-if="Object.keys(activeCommand).length">
+      <v-col sm="12" md="11" lg="10" xl="7">
+        <v-card v-if="activeCommand.inputs.length" class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col v-for="input in activeCommand.inputs" 
+                :key="input.name" 
+                cols="6" sm="4" md="4" lg="4" xl="3">
+                <v-text-field
+              :label="input.label"
+              v-model="input.value"
+              :hint="input.name"
+            ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card v-if="activeCommand.options.length" class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col v-for="option in activeCommand.options" 
+                :key="option.name" 
+                cols="6" sm="4" md="4" lg="4" xl="3">
+                <div v-if="option.type == 'boolean'">
+                  <v-checkbox @change="optionChecker(option.state)" v-model="option.state" :label="option.label"></v-checkbox>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col>
+                <v-sheet  elevation="1" class="pre"><span>{{ commandInterpreter(activeCommand.input.content) }}</span></v-sheet>
+              </v-col>
+            </v-row>
+          </v-card-text> 
+        </v-card>
+        <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2'" class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col md="12" >
+                <v-text-field label="Name" v-model="activeCommand.name"></v-text-field>
+                <v-text-field label="Syntax" v-model="activeCommand.syntax"></v-text-field>
+                <v-card v-if="activeCommand.inputs.length" class="mb-3">
+                  <v-card-text>
+                    <v-row>
+                      <v-col v-for="input in activeCommand.inputs" 
+                        :key="input.name" 
+                        cols="6" sm="4" md="4" lg="4" xl="3">
+                        <v-text-field
+                      :label="input.label"
+                      v-model="input.value"
+                      :hint="input.name"
+                    ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+                <v-card v-if="activeCommand.options.length" class="mb-3">
+                  <v-card-text>
+                    <v-row>
+                      <v-col v-for="option in activeCommand.options" 
+                        :key="option.name" 
+                        cols="6" sm="4" md="4" lg="4" xl="3">
+                        <v-text-field
+                      :label="option.label"
+                      v-model="option.value"
+                      :hint="option.name"
+                    ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+                <v-textarea label="Form" v-model="activeCommandString"></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="addCommand()">Add command</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { taskInterpreter } from "../mixins/interpreter.js"
 
 export default {
@@ -87,9 +98,9 @@ export default {
   components: { 
   },
   computed: {
-    ...mapState(["userProfile"]),
-    activeDocString(){
-      return JSON.stringify(this.activeDoc)
+    ...mapState(["activeCommand","userProfile"]),
+    activeCommandString(){
+      return JSON.stringify(this.activeCommand)
     },
   },
   data: () => ({
@@ -112,9 +123,32 @@ export default {
     }
   }),
   methods: {
+    ...mapActions(['createCommand','fetchCommand']),
     addCommand(){
-      console.log(this.activeDoc)
-    }
+      this.createCommand(this.activeDoc)
+    },
+    init(){
+      if(this.$route.name === "ReadCommand"){
+        this.fetchCommand(this.$route.params)
+      }
+
+      if(this.$route.name === "CreateCommand"){
+        let newDoc = {
+          title: '',
+          slug: '',
+          description: '',
+          status: 'edit',
+          variableTag: 'vv',
+          steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
+          inputs: [],
+          create: true,
+        }
+        this.setActiveDoc(newDoc)
+      }
+    },
+  },
+  mounted() {
+    this.init()
   },
 }
 </script>
