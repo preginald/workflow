@@ -17,10 +17,13 @@ export const taskInterpreter = {
       return newTask;
     },
     processHyphen(task) {
-      if (this.optionHyphen == false) {
-        task = task.replace("<hyphen>", "");
-      } else {
-        task = task.replace("<hyphen>", " -");
+      console.log(task.includes("<hyphen>"));
+      if (task.includes("<hyphen>")) {
+        if (this.optionHyphen == false) {
+          task = task.replace("<hyphen>", "");
+        } else {
+          task = task.replace("<hyphen>", " -");
+        }
       }
       return task;
     },
