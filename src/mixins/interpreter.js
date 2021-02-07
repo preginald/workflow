@@ -13,11 +13,12 @@ export const taskInterpreter = {
     commandInterpreter(task) {
       let newTask = this.processCommandVariables(task);
       newTask = this.processCommandOptions(newTask);
-      newTask = this.processHyphen(newTask);
+      if (!this.activeCommand.create) {
+        newTask = this.processHyphen(newTask);
+      }
       return newTask;
     },
     processHyphen(task) {
-      console.log(task.includes("<hyphen>"));
       if (task.includes("<hyphen>")) {
         if (this.optionHyphen == false) {
           task = task.replace("<hyphen>", "");
