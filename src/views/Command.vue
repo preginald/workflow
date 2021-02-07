@@ -4,6 +4,67 @@
     <h2>Syntax</h2>
     <v-row v-if="Object.keys(activeCommand).length">
       <v-col sm="12" md="11" lg="10" xl="7">
+        <v-row v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create">
+          <v-col>
+            <h1 class="text-h5">Create a new command</h1>
+            <p> A command consists of options and inputs</p>
+          </v-col>
+        </v-row>
+        <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create" class="mb-3">
+          <v-card-text>
+            <v-row>
+              <v-col md="12" >
+                <v-text-field label="Name" v-on:keyup="nameToSlug" v-model="activeCommand.name"></v-text-field>
+                <v-text-field label="Command" v-model="activeCommand.command"></v-text-field>
+                <v-text-field label="Syntax" v-model="activeCommand.syntax"></v-text-field>
+                <v-text-field label="Slug" v-model="activeCommand.slug"></v-text-field>
+                <v-textarea label="Description" v-model="activeCommand.description"></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create" class="mb-1">
+          <v-row>
+            <v-col md="6">
+              <v-card-title class="text-h7">Variables</v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col sm="12">
+                    <v-text-field label="label" v-model="optionLabel"></v-text-field>
+                  </v-col>
+                  <v-col sm="12">
+                    <v-text-field label="name" v-model="optionName"></v-text-field>
+                  </v-col>
+                  <v-col sm="12">
+                    <v-text-field label="value" v-model="optionValue"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="addOption()">Add option</v-btn>
+              </v-card-actions>
+            </v-col>
+            <v-col md="6">
+              <v-card-title class="text-h7">Inputs</v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col sm="12">
+                    <v-text-field label="label" v-on:keyup="labelToNameAndValue" v-model="inputLabel"></v-text-field>
+                  </v-col>
+                  <v-col sm="12">
+                    <v-text-field label="name" v-model="inputName"></v-text-field>
+                  </v-col>
+                  <v-col sm="12">
+                    <v-text-field label="value" v-model="inputValue"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="addInput()">Add input</v-btn>
+              </v-card-actions>
+            </v-col>
+          </v-row>
+        </v-card>
         <v-card v-if="activeCommand.inputs.length" class="mb-3">
           <v-card-text>
             <v-row>
@@ -36,7 +97,8 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-sheet  elevation="1" class="pre"><span>{{ commandInterpreter(activeCommand.input.content) }}</span></v-sheet>
+                <v-text-field v-if="activeCommand.create" label="command" v-model="activeCommand.input.content"></v-text-field>
+                <v-sheet elevation="1" class="pre"><span>{{ commandInterpreter(activeCommand.input.content) }}</span></v-sheet>
               </v-col>
             </v-row>
           </v-card-text> 
@@ -45,38 +107,6 @@
           <v-card-text>
             <v-row>
               <v-col md="12" >
-                <v-text-field label="Name" v-model="activeCommand.name"></v-text-field>
-                <v-text-field label="Syntax" v-model="activeCommand.syntax"></v-text-field>
-                <v-card v-if="activeCommand.inputs.length" class="mb-3">
-                  <v-card-text>
-                    <v-row>
-                      <v-col v-for="input in activeCommand.inputs" 
-                        :key="input.name" 
-                        cols="6" sm="4" md="4" lg="4" xl="3">
-                        <v-text-field
-                      :label="input.label"
-                      v-model="input.value"
-                      :hint="input.name"
-                    ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-card>
-                <v-card v-if="activeCommand.options.length" class="mb-3">
-                  <v-card-text>
-                    <v-row>
-                      <v-col v-for="option in activeCommand.options" 
-                        :key="option.name" 
-                        cols="6" sm="4" md="4" lg="4" xl="3">
-                        <v-text-field
-                      :label="option.label"
-                      v-model="option.value"
-                      :hint="option.name"
-                    ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-card>
                 <v-textarea label="Form" v-model="activeCommandString"></v-textarea>
               </v-col>
             </v-row>
@@ -90,7 +120,7 @@
   </v-container>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { taskInterpreter } from "../mixins/interpreter.js"
 
 export default {
@@ -104,6 +134,12 @@ export default {
     },
   },
   data: () => ({
+    inputLabel: '',
+    inputName: '',
+    inputValue: '',
+    optionLabel: '',
+    optionName: '',
+    optionValue: '',
     activeDoc: {
       name: "rsync",
       syntax: "rsync options source destination",
@@ -123,6 +159,7 @@ export default {
     }
   }),
   methods: {
+    ...mapMutations(['setActiveDoc','setActiveCommand']),
     ...mapActions(['createCommand','fetchCommand']),
     addCommand(){
       this.createCommand(this.activeDoc)
@@ -133,17 +170,47 @@ export default {
       }
 
       if(this.$route.name === "CreateCommand"){
-        let newDoc = {
-          title: '',
-          slug: '',
-          description: '',
-          status: 'edit',
-          variableTag: 'vv',
-          steps: [{title: 'First step', tasks: [{intro: {content: '', form: true}, input: {content: '', form: true}, output: {content: '', form: true},type: '',form: []}]}],
-          inputs: [],
+        let newCommand = {
+          name: "",
+          syntax: "",
+          slug: "",
+          command: "",
           create: true,
+          variableTag: "vv",
+          optionTag: "oo",
+          input: {content: ""},
+          inputs: [],
+          options: [],
         }
-        this.setActiveDoc(newDoc)
+        this.setActiveCommand(newCommand)
+      }
+    },
+    addInput(){
+      this.activeCommand.inputs.push({label: this.inputLabel, name: this.inputName, value: this.inputValue})
+      this.inputLabel = ''
+      this.inputName = ''
+      this.inputValue = ''
+    },
+    addOption(){
+      this.activeCommand.options.push({type: "boolean", state: false, label: this.optionLabel, name: this.optionName, value: this.optionValue})
+      this.optionLabel = ''
+      this.optionName = ''
+      this.optionValue = ''
+    },
+    nameToSlug(){
+      if(this.activeCommand.name){
+        this.activeCommand.slug = this.activeCommand.name.replace(/\s+/g, '-').toLowerCase();
+      } else {
+        this.activeCommand.slug = ''
+      }
+    },
+    labelToNameAndValue(){
+      if(this.inputLabel){
+        this.inputName = this.inputLabel.toLowerCase();
+        this.inputValue = this.inputLabel.toLowerCase();
+      } else {
+        this.inputName = "";
+        this.inputValue = "";
       }
     },
   },
