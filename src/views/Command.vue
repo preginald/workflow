@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <h1>{{ activeCommand.name }}</h1>
-    <h2>Syntax</h2>
     <v-row v-if="Object.keys(activeCommand).length">
       <v-col sm="12" md="11" lg="10" xl="7">
         <v-row v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create">
@@ -10,6 +9,12 @@
             <p> A command consists of options and inputs</p>
           </v-col>
         </v-row>
+        <v-card class="mb-3">
+          <v-card-title class="text-h7">Syntax</v-card-title>
+          <v-card-text>
+            <v-sheet elevation="1" class="pre"><span>{{ activeCommand.syntax }}</span></v-sheet>
+          </v-card-text>
+        </v-card>
         <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create" class="mb-3">
           <v-card-text>
             <v-row>
@@ -65,7 +70,22 @@
             </v-col>
           </v-row>
         </v-card>
+        <v-card v-if="activeCommand.options.length" class="mb-3">
+          <v-card-title class="text-h7">Options</v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col v-for="option in activeCommand.options" 
+                :key="option.name" 
+                cols="6" sm="4" md="4" lg="4" xl="3">
+                <div v-if="option.type == 'boolean'">
+                  <v-checkbox @change="optionChecker(option.state)" v-model="option.state" :label="option.label"></v-checkbox>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
         <v-card v-if="activeCommand.inputs.length" class="mb-3">
+          <v-card-title class="text-h7">Inputs</v-card-title>
           <v-card-text>
             <v-row>
               <v-col v-for="input in activeCommand.inputs" 
@@ -80,19 +100,6 @@
             </v-row>
           </v-card-text>
         </v-card>
-        <v-card v-if="activeCommand.options.length" class="mb-3">
-          <v-card-text>
-            <v-row>
-              <v-col v-for="option in activeCommand.options" 
-                :key="option.name" 
-                cols="6" sm="4" md="4" lg="4" xl="3">
-                <div v-if="option.type == 'boolean'">
-                  <v-checkbox @change="optionChecker(option.state)" v-model="option.state" :label="option.label"></v-checkbox>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
         <v-card class="mb-3">
           <v-card-text>
             <v-row>
@@ -103,7 +110,7 @@
             </v-row>
           </v-card-text> 
         </v-card>
-        <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2'" class="mb-3">
+        <v-card v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create" class="mb-3">
           <v-card-text>
             <v-row>
               <v-col md="12" >
@@ -162,7 +169,7 @@ export default {
     ...mapMutations(['setActiveDoc','setActiveCommand']),
     ...mapActions(['createCommand','fetchCommand']),
     addCommand(){
-      this.createCommand(this.activeDoc)
+      this.createCommand(this.activeCommand)
     },
     init(){
       if(this.$route.name === "ReadCommand"){
@@ -175,6 +182,8 @@ export default {
           syntax: "",
           slug: "",
           command: "",
+          username: "",
+          uid: "",
           create: true,
           variableTag: "vv",
           optionTag: "oo",
