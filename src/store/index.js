@@ -371,6 +371,7 @@ export default new Vuex.Store({
       });
     },
     async createCommand({ state, commit }, command) {
+      command.create = false;
       command.username = state.userProfile.username;
       command.uid = state.userProfile.uid;
 
@@ -379,15 +380,15 @@ export default new Vuex.Store({
         .then((docRef) => {
           console.log("Saved command: ", docRef.id);
           command.id = docRef.id;
-          // commit("setActiveDoc", doc);
+          commit("setActiveCommand", command);
           // commit("setEditDoc", editStatus);
           commit("setSnackbar", {
             status: true,
             text: "Command successfully created",
           });
           router.push({
-            //name: "ReadDoc",
-            //params: { userName: doc.username, docSlug: doc.slug },
+            name: "ReadCommand",
+            params: { commandSlug: command.slug },
           });
         })
         .catch((error) => {
