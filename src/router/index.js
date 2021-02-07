@@ -19,6 +19,15 @@ const routes = [
     },
   },
   {
+    path: "/commands/new",
+    name: "CreateCommand",
+    component: () =>
+      import(/* webpackChunkName: "new" */ "../views/Command.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/signup",
     name: "Signup",
     component: () =>
