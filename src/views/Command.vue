@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <h1>{{ activeCommand.name }}</h1>
+    <h2 class="text-h6">
+      <a href="/commands/">Commands</a> / {{ activeCommand.name }}
+    </h2>
     <v-row v-if="Object.keys(activeCommand).length">
       <v-col sm="12" md="11" lg="10" xl="7">
         <v-row v-if="userProfile.uid == 'mujiP5vK54hMq9n0ObiswWecO4k2' && activeCommand.create">

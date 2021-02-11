@@ -12,6 +12,7 @@ export default new Vuex.Store({
     userDocs: null,
     taskTypes: ["none", "bash", "html", "js", "mysql", "php", "yml"],
     activeDoc: {},
+    commands: [],
     activeCommand: {},
     nav: false,
     isOwner: false,
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     setActiveDoc(state, doc) {
       state.activeDoc = doc;
+    },
+    setCommands(state, commands) {
+      state.commands = commands;
     },
     setActiveCommand(state, command) {
       state.activeCommand = command;
@@ -215,6 +219,13 @@ export default new Vuex.Store({
       }
       dispatch("hintsFromTaskInputs", doc);
     },
+    loadCommand({ commit }, command) {
+      commit("setActiveCommand", command);
+      router.push({
+        name: "ReadCommand",
+        params: { commandSlug: command.slug },
+      });
+    },
     async isOwner({ commit, state }) {
       var currentUser = await fb.auth.currentUser;
       if (currentUser) {
@@ -237,8 +248,6 @@ export default new Vuex.Store({
     },
     async toggleEditDoc({ state, commit }) {
       let doc = state.activeDoc;
-      console.log(doc.id);
-      console.log(doc.edit);
       doc.edit = !doc.edit;
       await fb.docsCollection
         .doc(doc.id)
@@ -329,7 +338,6 @@ export default new Vuex.Store({
       commit("setActiveDoc", doc);
     },
     async saveDoc({ commit }, doc) {
-      console.log(doc.id);
       doc.edit = false;
       await fb.docsCollection
         .doc(doc.id)
@@ -348,7 +356,6 @@ export default new Vuex.Store({
       commit("setActiveDoc", doc);
     },
     async updateDoc({ commit }, doc) {
-      console.log(doc.id);
       await fb.docsCollection
         .doc(doc.id)
         .update(doc)
@@ -398,6 +405,22 @@ export default new Vuex.Store({
             text: "Error creating command!",
           });
         });
+    },
+    async fetchCommands({ state, commit }) {
+      if (typeof state.activeCommand.length == "undefined") {
+        // fetch active command
+        await fb.commandsCollection.get().then((querySnapshot) => {
+          let data = querySnapshot.docs.map((command) => ({
+            id: command.id,
+            ...command.data(),
+          }));
+
+          // dispatch("processor", data[0]);
+          // set active doc in state
+          // commit('setActiveDoc',data[0])
+          commit("setCommands", data);
+        });
+      }
     },
     async fetchCommand({ state, commit }, params) {
       if (typeof state.activeCommand.length == "undefined") {

@@ -19,6 +19,12 @@ const routes = [
     },
   },
   {
+    path: "/commands",
+    name: "ListCommands",
+    component: () =>
+      import(/* webpackChunkName: "new" */ "../views/ListCommands.vue"),
+  },
+  {
     path: "/commands/new",
     name: "CreateCommand",
     component: () =>
